@@ -1,11 +1,11 @@
 {
   "rewrites": [
     {
-      "source": "/stock-market-analyser/:path*",
+      "source": "/stock-market-analyzer/:path*",
       "destination": "https://stock-market-analyzer-sigma.vercel.app/:path*"
     },
     {
-      "source": "/stock-market-analyser",
+      "source": "/stock-market-analyzer",
       "destination": "https://stock-market-analyzer-sigma.vercel.app/"
     }
   ]
