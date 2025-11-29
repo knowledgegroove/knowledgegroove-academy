@@ -28,9 +28,14 @@ export default function Home() {
             <p className={styles.cardDesc}>
               Cutting-edge research and development at the intersection of financial technology and artificial intelligence.
             </p>
-            <Link href="/stock-market-analyzer" className="btn" style={{ marginTop: '1rem', fontSize: '0.9rem', textAlign: 'center' }}>
-              Try Stock Analyzer
-            </Link>
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '1rem' }}>
+              <Link href="/stock-market-analyzer" className="btn" style={{ fontSize: '0.9rem', textAlign: 'center' }}>
+                Stock Analyzer
+              </Link>
+              <Link href="/real-estate-analyzer" className="btn" style={{ fontSize: '0.9rem', textAlign: 'center' }}>
+                Real Estate Analyzer
+              </Link>
+            </div>
           </div>
           <div className={`${styles.card} glass-card`}>
             <h3 className={styles.cardTitle}>The Knowledge Groove Academy</h3>

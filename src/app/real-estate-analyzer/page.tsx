@@ -2,6 +2,12 @@
 
 import { useState, FormEvent } from 'react';
 import styles from './page.module.css';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: 'Real Estate Analyzer | Knowledge Groove',
+    description: 'AI-powered real estate analysis and investment insights.',
+};
 
 interface PropertyData {
     address: string;
