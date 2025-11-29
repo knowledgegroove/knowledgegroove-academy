@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react';
 import styles from "./page.module.css";
 import Link from "next/link";
 import IntroAnimation from "@/components/IntroAnimation";
+import TypewriterText from "@/components/TypewriterText";
 
 export default function Home() {
   const [showIntro, setShowIntro] = useState(true);
+  const [startTyping, setStartTyping] = useState(false);
 
   // Prevent scrolling while intro is playing
   useEffect(() => {
@@ -14,6 +16,8 @@ export default function Home() {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
+      // Start typing slightly before the intro fully fades out for seamless transition
+      setStartTyping(true);
     }
   }, [showIntro]);
 
@@ -24,18 +28,42 @@ export default function Home() {
         {/* Hero Section */}
         <section className={styles.hero}>
           <div className={styles.heroContent}>
-            <h1 className={`${styles.title} gradient-text-primary animate-fade-up`}>
-              Knowledge Groove
+            <h1 className={`${styles.title} gradient-text-primary`} style={{ minHeight: '1.1em' }}>
+              <TypewriterText
+                text="Knowledge Groove"
+                start={startTyping}
+                speed={70}
+                cursor={false}
+              />
             </h1>
-            <p className={`${styles.subtitle} animate-fade-up delay-100`}>
-              Empowering the future through the convergence of finance, technology, and artificial intelligence.
-            </p>
-            <div className={`${styles.heroButtons} animate-fade-up delay-200`}>
+            <div className={styles.subtitle} style={{ minHeight: '3.2em' }}>
+              <TypewriterText
+                text="Empowering the future through the convergence of finance, technology, and artificial intelligence."
+                start={startTyping}
+                delay={1200}
+                speed={30}
+                as="p"
+                cursor={false}
+              />
+            </div>
+            <div className={styles.heroButtons} style={{ opacity: startTyping ? 1 : 0, transition: 'opacity 0.5s ease 3.5s' }}>
               <Link href="#ecosystem" className="btn">
-                Explore Ecosystem
+                <TypewriterText
+                  text="Explore Ecosystem"
+                  start={startTyping}
+                  delay={3500}
+                  speed={50}
+                  cursor={false}
+                />
               </Link>
               <Link href="#about" className="btn" style={{ background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)' }}>
-                About Ishaan
+                <TypewriterText
+                  text="About Ishaan"
+                  start={startTyping}
+                  delay={4500}
+                  speed={50}
+                  cursor={false}
+                />
               </Link>
             </div>
           </div>
