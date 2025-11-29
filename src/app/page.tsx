@@ -28,12 +28,12 @@ export default function Home() {
             <p className={styles.cardDesc}>
               Cutting-edge research and development at the intersection of financial technology and artificial intelligence.
             </p>
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginTop: '1rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '1rem' }}>
               <Link href="/stock-market-analyzer" className="btn" style={{ fontSize: '0.9rem', textAlign: 'center' }}>
-                Stock Analyzer
+                Try Stock Analyzer
               </Link>
               <Link href="/real-estate-analyzer" className="btn" style={{ fontSize: '0.9rem', textAlign: 'center' }}>
-                Real Estate Analyzer
+                Try Real Estate Analyzer
               </Link>
             </div>
           </div>
