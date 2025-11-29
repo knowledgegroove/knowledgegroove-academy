@@ -45,7 +45,8 @@ export default function Home() {
         <h2 className={`${styles.sectionTitle} gradient-text`}>About Ishaan</h2>
         <div className="glass-card" style={{ maxWidth: '800px' }}>
           <p style={{ fontSize: '1.1rem', lineHeight: '1.8' }}>
-            Ishaan is the visionary behind Knowledge Groove, dedicated to bridging the gap between complex technologies and accessible knowledge. With a passion for FinTech and AI, Ishaan leads projects that push the boundaries of what's possible, while fostering a community of learners and innovators.
+            Ishaan is the visionary behind Knowledge Groove, dedicated to bridging the gap between complex technologies and accessible knowledge. With a passion for FinTech and AI, Ishaan leads projects that push the boundaries of what&apos;s possible, while fostering a community of learners and innovators.
+
           </p>
         </div>
       </section>
