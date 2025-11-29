@@ -50,10 +50,6 @@ export default function IntroAnimation({ onComplete }: { onComplete: () => void 
                     <span className={styles.symbol}>AI</span>
                     <span className={styles.symbol}>⚡</span>
                 </div>
-
-                <div className={styles.titleContainer}>
-                    <h1 className={styles.title}>Knowledge Groove</h1>
-                </div>
             </div>
         </div>
     );

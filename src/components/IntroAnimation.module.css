@@ -10,7 +10,7 @@
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    animation: fadeOut 0.5s ease-in-out 3.5s forwards;
+    transition: opacity 0.8s ease-in-out;
 }
 
 .content {
@@ -31,6 +31,7 @@
     box-shadow: 0 0 30px #4f46e5, 0 0 60px #8b5cf6;
     z-index: 10;
     animation: pulse 2s infinite;
+    transition: all 0.6s cubic-bezier(0.6, -0.28, 0.735, 0.045);
 }
 
 /* Rings */
@@ -41,6 +42,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: all 1s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
 .ring1 {
@@ -130,25 +132,6 @@
     color: #60a5fa;
 }
 
-/* Final Text Reveal */
-.titleContainer {
-    position: absolute;
-    z-index: 20;
-    opacity: 0;
-    animation: revealText 1s ease-out 2.5s forwards;
-    text-align: center;
-}
-
-.title {
-    font-size: 2.5rem;
-    font-weight: 800;
-    background: linear-gradient(to right, #fff, #a855f7);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    letter-spacing: -0.05em;
-}
-
 /* Animations */
 @keyframes spin {
     from {
@@ -174,38 +157,19 @@
     }
 }
 
-@keyframes fadeOut {
-    to {
-        opacity: 0;
-        visibility: hidden;
-    }
+/* Collapse/Expand Animation (triggered by class) */
+.collapsing {
+    opacity: 0;
+    pointer-events: none;
 }
 
-@keyframes revealText {
-    0% {
-        transform: scale(0.5);
-        opacity: 0;
-        filter: blur(10px);
-    }
-
-    100% {
-        transform: scale(1);
-        opacity: 1;
-        filter: blur(0);
-    }
-}
-
-/* Collapse Animation (triggered by class) */
 .collapsing .ring {
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    width: 0;
-    height: 0;
+    transform: scale(4);
     opacity: 0;
     border-width: 0;
 }
 
 .collapsing .core {
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    transform: scale(30);
+    transform: scale(0);
     opacity: 0;
 }

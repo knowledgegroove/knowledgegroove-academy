@@ -140,11 +140,6 @@ export default function Home() {
                   With a passion for FinTech and AI, Ishaan leads projects that push the boundaries of what&apos;s possible, while fostering a community of learners and innovators. His work focuses on creating intuitive interfaces for complex data systems.
                 </p>
               </div>
-              <div style={{ marginTop: '1rem' }}>
-                <Link href="https://ishaangarg.com" target="_blank" className="btn">
-                  Visit Portfolio
-                </Link>
-              </div>
             </div>
             <div className={`${styles.aboutImage} glass-card`}>
               {/* Placeholder for an image or abstract graphic */}
