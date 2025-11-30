@@ -1,4 +1,4 @@
-import { useScroll, Sky, Environment, PerspectiveCamera } from '@react-three/drei';
+import { useScroll, Sky, Environment, PerspectiveCamera, Cloud } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useRef, useMemo } from 'react';
 import * as THREE from 'three';
@@ -42,24 +42,51 @@ export default function Experience() {
         <>
             <PerspectiveCamera makeDefault position={[0, 2, 10]} ref={cameraRef} fov={60} />
 
-            {/* Daylight Environment */}
-            <color attach="background" args={['#87CEEB']} />
-            <Sky sunPosition={[100, 20, 100]} />
-            <ambientLight intensity={0.8} />
-            <directionalLight
-                position={[50, 50, 25]}
-                intensity={1.5}
-                castShadow
-                shadow-mapSize={[1024, 1024]}
+            {/* Sunset Environment - Inspired by highway image */}
+            <color attach="background" args={['#ffd7a8']} />
+
+            {/* Sunset Sky */}
+            <Sky
+                sunPosition={[100, 5, 100]}
+                inclination={0.52}
+                azimuth={0.25}
+                turbidity={8}
+                rayleigh={2}
             />
-            <fog attach="fog" args={['#87CEEB', 10, 80]} />
+
+            {/* Volumetric Clouds */}
+            <Cloud position={[-20, 15, -40]} speed={0.1} opacity={0.4} color="#ffb380" />
+            <Cloud position={[25, 18, -60]} speed={0.15} opacity={0.3} color="#ffa060" />
+            <Cloud position={[-15, 20, -80]} speed={0.12} opacity={0.35} color="#ff9050" />
+            <Cloud position={[30, 16, -100]} speed={0.08} opacity={0.4} color="#ffb890" />
+
+            {/* Warm Sunset Lighting */}
+            <ambientLight intensity={0.6} color="#ffe4b5" />
+            <directionalLight
+                position={[100, 30, 50]}
+                intensity={1.8}
+                color="#ffb366"
+                castShadow
+                shadow-mapSize={[2048, 2048]}
+            />
+            <hemisphereLight
+                intensity={0.5}
+                color="#ffd7a8"
+                groundColor="#7fa86e"
+            />
+
+            <fog attach="fog" args={['#ffd7a8', 20, 100]} />
 
             {/* City Content */}
             <group ref={groupRef}>
-                {/* Ground */}
+                {/* Vibrant Green Grass Ground */}
                 <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, -50]} receiveShadow>
                     <planeGeometry args={[200, 200]} />
-                    <meshStandardMaterial color="#3a4d31" />
+                    <meshStandardMaterial
+                        color="#5a9e3a"
+                        roughness={0.9}
+                        metalness={0.1}
+                    />
                 </mesh>
 
                 {/* Nature */}
