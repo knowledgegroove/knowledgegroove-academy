@@ -18,8 +18,8 @@ export default function Experience() {
         return new THREE.CatmullRomCurve3([
             new THREE.Vector3(0, 2, 10),    // Start
             new THREE.Vector3(0, 5, -10),   // Podcast Approach
-            new THREE.Vector3(8, 6, -30),   // FinTech Approach
-            new THREE.Vector3(-8, 6, -50),  // Academy Approach
+            new THREE.Vector3(0, 6, -30),   // FinTech Approach
+            new THREE.Vector3(0, 6, -50),   // Academy Approach
             new THREE.Vector3(0, 12, -70),  // Creator Tower Approach
             new THREE.Vector3(0, 20, -90),  // End Overview
         ], false, 'catmullrom', 0.5);
@@ -68,16 +68,22 @@ export default function Experience() {
                 <Trees count={100} area={150} />
                 <Mountains />
 
-                {/* Roads */}
-                <Road position={[0, 0.1, -20]} length={40} /> {/* Main Road */}
-                <Road position={[8, 0.1, -40]} rotation={[0, Math.PI / 4, 0]} length={30} /> {/* To FinTech */}
-                <Road position={[-8, 0.1, -60]} rotation={[0, -Math.PI / 4, 0]} length={30} /> {/* To Academy */}
-                <Road position={[0, 0.1, -80]} length={30} /> {/* To Tower */}
+                {/* Roads - Continuous Straight Line */}
+                <Road position={[0, 0.1, -20]} length={40} />
+                <Road position={[0, 0.1, -60]} length={40} />
+                <Road position={[0, 0.1, -100]} length={40} />
 
-                {/* Districts */}
-                <PodcastDistrict position={[0, 0, -20]} />
-                <FinTechDistrict position={[15, 0, -40]} />
-                <AcademyDistrict position={[-15, 0, -60]} />
+                {/* Districts - Aligned along the straight road */}
+                {/* Podcast on Left */}
+                <PodcastDistrict position={[-8, 0, -20]} />
+
+                {/* FinTech on Right */}
+                <FinTechDistrict position={[8, 0, -40]} />
+
+                {/* Academy on Left */}
+                <AcademyDistrict position={[-8, 0, -60]} />
+
+                {/* Creator Tower at the End */}
                 <CreatorTower position={[0, 0, -80]} />
             </group>
         </>
