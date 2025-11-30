@@ -2,37 +2,80 @@
 
 import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Text, Float, MeshDistortMaterial, Html } from '@react-three/drei';
+import { Text, Float, MeshDistortMaterial, Html, RoundedBox } from '@react-three/drei';
 import * as THREE from 'three';
 
-// Reusable Neon Building Component
+// Reusable Neon Building Component with Rounded Edges
 export function Building({ position, args, color, delay = 0 }: any) {
     const mesh = useRef<THREE.Mesh>(null);
-    const edgesGeo = useMemo(() => new THREE.EdgesGeometry(new THREE.BoxGeometry(...args)), [args]);
 
     useFrame((state) => {
         if (mesh.current) {
-            mesh.current.position.y = position[1] + Math.sin(state.clock.elapsedTime + delay) * 0.2;
+            // The animation should affect the local y position of the RoundedBox relative to its parent group.
+            // The base position is handled by the <group position={position}>.
+            mesh.current.position.y = Math.sin(state.clock.elapsedTime + delay) * 0.2;
         }
     });
 
     return (
-        <mesh ref={mesh} position={position}>
-            <boxGeometry args={args} />
-            <meshStandardMaterial
-                color={color}
-                emissive={color}
-                emissiveIntensity={0.5}
-                roughness={0.1}
-                metalness={0.8}
-                transparent
-                opacity={0.9}
-            />
-            {/* Wireframe effect overlay */}
-            <lineSegments geometry={edgesGeo}>
-                <lineBasicMaterial color="white" transparent opacity={0.2} />
-            </lineSegments>
-        </mesh>
+        <group position={position}>
+            <RoundedBox args={args} radius={0.1} smoothness={4} ref={mesh}>
+                <meshStandardMaterial
+                    color={color}
+                    emissive={color}
+                    emissiveIntensity={0.5}
+                    roughness={0.2}
+                    metalness={0.8}
+                />
+            </RoundedBox>
+        </group>
+    );
+}
+
+// Road Segment Component
+export function Road({ position, rotation = [0, 0, 0], length = 20 }: any) {
+    return (
+        <group position={position} rotation={rotation}>
+            {/* Road Surface */}
+            <mesh rotation={[-Math.PI / 2, 0, 0]}>
+                <planeGeometry args={[4, length]} />
+                <meshStandardMaterial color="#1a1a1a" roughness={0.8} metalness={0.2} />
+            </mesh>
+            {/* Glowing Edges */}
+            <mesh position={[-2.1, 0.05, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                <planeGeometry args={[0.2, length]} />
+                <meshBasicMaterial color="#4f46e5" transparent opacity={0.5} />
+            </mesh>
+            <mesh position={[2.1, 0.05, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+                <planeGeometry args={[0.2, length]} />
+                <meshBasicMaterial color="#4f46e5" transparent opacity={0.5} />
+            </mesh>
+            {/* Moving Data Particles (Simulated Traffic) */}
+            <MovingParticles length={length} />
+        </group>
+    );
+}
+
+function MovingParticles({ length }: { length: number }) {
+    const particles = useRef<THREE.Group>(null);
+
+    useFrame((state) => {
+        if (particles.current) {
+            particles.current.children.forEach((child: any, i) => {
+                child.position.z = (state.clock.elapsedTime * 5 + i * 5) % length - length / 2;
+            });
+        }
+    });
+
+    return (
+        <group ref={particles} position={[0, 0.1, 0]}>
+            {[...Array(5)].map((_, i) => (
+                <mesh key={i} position={[0, 0, 0]}>
+                    <boxGeometry args={[0.2, 0.2, 1]} />
+                    <meshBasicMaterial color="#fff" />
+                </mesh>
+            ))}
+        </group>
     );
 }
 

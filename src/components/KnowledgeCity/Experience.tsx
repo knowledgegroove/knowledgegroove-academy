@@ -4,7 +4,7 @@ import { useScroll, Stars, PerspectiveCamera } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useRef, useMemo } from 'react';
 import * as THREE from 'three';
-import { PodcastDistrict, FinTechDistrict, AcademyDistrict, CreatorTower } from './Buildings';
+import { PodcastDistrict, FinTechDistrict, AcademyDistrict, CreatorTower, Road } from './Buildings';
 
 export default function Experience() {
     const scroll = useScroll();
@@ -60,17 +60,17 @@ export default function Experience() {
                 {/* Floor Grid */}
                 <gridHelper args={[200, 100, 0x4f46e5, 0x222222]} position={[0, -0.1, -50]} />
 
+                {/* Roads */}
+                <Road position={[0, 0.1, -20]} length={40} /> {/* Main Road */}
+                <Road position={[8, 0.1, -40]} rotation={[0, Math.PI / 4, 0]} length={30} /> {/* To FinTech */}
+                <Road position={[-8, 0.1, -60]} rotation={[0, -Math.PI / 4, 0]} length={30} /> {/* To Academy */}
+                <Road position={[0, 0.1, -80]} length={30} /> {/* To Tower */}
+
                 {/* Districts */}
                 <PodcastDistrict position={[0, 0, -20]} />
                 <FinTechDistrict position={[15, 0, -40]} />
                 <AcademyDistrict position={[-15, 0, -60]} />
                 <CreatorTower position={[0, 0, -80]} />
-
-                {/* Connecting Lines/Roads (Visual only) */}
-                <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.05, -50]}>
-                    <planeGeometry args={[2, 100]} />
-                    <meshBasicMaterial color="#4f46e5" transparent opacity={0.1} />
-                </mesh>
             </group>
         </>
     );

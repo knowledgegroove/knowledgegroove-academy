@@ -9,7 +9,7 @@ export default function Overlay() {
             <section style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
                 <div style={{ textAlign: 'center', color: 'white' }}>
                     <h1 style={{ fontSize: '5rem', fontWeight: '800', textShadow: '0 0 20px rgba(79, 70, 229, 0.8)' }}>
-                        Welcome to Knowledge City
+                        Welcome to Knowledge Groove
                     </h1>
                     <p style={{ fontSize: '1.5rem', opacity: 0.8 }}>Where Ideas Grow</p>
                     <div style={{ marginTop: '2rem', fontSize: '0.8rem', opacity: 0.5 }}>SCROLL TO EXPLORE</div>
@@ -23,7 +23,7 @@ export default function Overlay() {
                     <p style={{ marginBottom: '1.5rem', lineHeight: '1.6' }}>
                         Stories of history, science, business, and innovation.
                     </p>
-                    <a href="#podcast" style={{ pointerEvents: 'auto', color: '#a855f7', fontWeight: 'bold', textDecoration: 'none' }}>Enter Podcast Plaza →</a>
+                    <a href="#podcast" style={{ pointerEvents: 'auto', color: '#a855f7', fontWeight: 'bold', textDecoration: 'none' }}>Listen to Podcast →</a>
                 </div>
             </section>
 
@@ -34,7 +34,10 @@ export default function Overlay() {
                     <p style={{ marginBottom: '1.5rem', lineHeight: '1.6' }}>
                         AI tools, predictive models, cybersecurity, and data analysis.
                     </p>
-                    <a href="/stock-market-analyzer" style={{ pointerEvents: 'auto', color: '#00C4FF', fontWeight: 'bold', textDecoration: 'none' }}>Explore the Lab →</a>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                        <a href="/stock-market-analyzer" style={{ pointerEvents: 'auto', color: '#00C4FF', fontWeight: 'bold', textDecoration: 'none' }}>Try Stock Analyzer →</a>
+                        <a href="/real-estate-analyzer" style={{ pointerEvents: 'auto', color: '#00C4FF', fontWeight: 'bold', textDecoration: 'none' }}>Try Real Estate Analyzer →</a>
+                    </div>
                 </div>
             </section>
 
