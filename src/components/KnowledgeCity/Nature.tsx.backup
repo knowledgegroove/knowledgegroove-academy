@@ -3,6 +3,7 @@
 import { useMemo, useRef } from 'react';
 import { Instance, Instances } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
+import { useScroll } from '@react-three/drei';
 import * as THREE from 'three';
 
 export function Trees({ count = 50, area = 100 }: { count?: number, area?: number }) {
@@ -240,33 +241,29 @@ function Car({ position, color }: { position: [number, number, number], color: s
     );
 }
 
-// Highway Cars - animated continuously based on time
+// Highway Cars - animated based on scroll
 export function HighwayCars() {
+    const scroll = useScroll();
     const carsRef = useRef<THREE.Group>(null);
 
     const cars = useMemo(() => [
-        { lane: -1.5, offset: 0, color: '#ff4444', speed: 8 },
-        { lane: -1.5, offset: -30, color: '#4444ff', speed: 7 },
-        { lane: -1.5, offset: -60, color: '#44ff44', speed: 9 },
-        { lane: -1.5, offset: -90, color: '#ffaa44', speed: 7.5 },
-        { lane: 1.5, offset: -15, color: '#ffff44', speed: 8.5 },
-        { lane: 1.5, offset: -45, color: '#ff44ff', speed: 6.5 },
-        { lane: 1.5, offset: -75, color: '#44ffff', speed: 8 },
-        { lane: 1.5, offset: -105, color: '#aa44ff', speed: 7 },
+        { lane: -1.5, offset: 0, color: '#ff4444', speed: 1.2 },
+        { lane: -1.5, offset: -30, color: '#4444ff', speed: 1.0 },
+        { lane: -1.5, offset: -60, color: '#44ff44', speed: 1.3 },
+        { lane: 1.5, offset: -15, color: '#ffff44', speed: 1.1 },
+        { lane: 1.5, offset: -45, color: '#ff44ff', speed: 0.9 },
+        { lane: 1.5, offset: -75, color: '#44ffff', speed: 1.15 },
     ], []);
 
-    useFrame((state) => {
+    useFrame(() => {
         if (carsRef.current) {
+            const scrollSpeed = scroll.offset * 200; // Convert scroll to distance
+
             carsRef.current.children.forEach((carGroup: any, i) => {
                 const car = cars[i];
-                // Move cars continuously based on time
-                // Cars move backward (negative z direction)
-                carGroup.position.z = ((car.offset - state.clock.elapsedTime * car.speed) % 200) + 20;
-
-                // Reset to far position when they go too far forward
-                if (carGroup.position.z > 20) {
-                    carGroup.position.z = -180 + (carGroup.position.z - 20);
-                }
+                // Move cars based on scroll
+                const newZ = (car.offset - scrollSpeed * car.speed) % 120;
+                carGroup.position.z = newZ > 20 ? newZ - 120 : newZ;
             });
         }
     });

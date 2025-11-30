@@ -108,10 +108,12 @@ export default function Experience() {
                 {/* Highway Cars */}
                 <HighwayCars />
 
-                {/* Roads - Continuous Straight Line */}
+                {/* Roads - Extended to start from camera position */}
+                <Road position={[0, 0.1, 10]} length={30} />  {/* Start road visible from beginning */}
                 <Road position={[0, 0.1, -20]} length={40} />
                 <Road position={[0, 0.1, -60]} length={40} />
                 <Road position={[0, 0.1, -100]} length={40} />
+                <Road position={[0, 0.1, -140]} length={40} /> {/* Extended further */}
 
                 {/* Districts - Aligned along the straight road */}
                 {/* Podcast on Left */}
