@@ -118,7 +118,6 @@ export function PodcastDistrict({ position }: { position: [number, number, numbe
                 anchorY="middle"
                 outlineWidth={0.1}
                 outlineColor="#000000"
-                font="https://fonts.gstatic.com/s/orbitron/v31/yMJMMIlzdpvBhQQL_SC3X9yhF25-T1nyGy6xpmIyXjU1pg.woff"
             >
                 PODCAST
             </Text>
@@ -226,7 +225,6 @@ export function FinTechDistrict({ position }: { position: [number, number, numbe
                 anchorY="middle"
                 outlineWidth={0.1}
                 outlineColor="#000000"
-                font="https://fonts.gstatic.com/s/orbitron/v31/yMJMMIlzdpvBhQQL_SC3X9yhF25-T1nyGy6xpmIyXjU1pg.woff"
             >
                 AI + FINTECH
             </Text>
@@ -320,7 +318,6 @@ export function AcademyDistrict({ position }: { position: [number, number, numbe
                 anchorY="middle"
                 outlineWidth={0.1}
                 outlineColor="#000000"
-                font="https://fonts.gstatic.com/s/orbitron/v31/yMJMMIlzdpvBhQQL_SC3X9yhF25-T1nyGy6xpmIyXjU1pg.woff"
             >
                 ACADEMY
             </Text>
@@ -416,7 +413,6 @@ export function CreatorTower({ position }: { position: [number, number, number] 
                 anchorY="middle"
                 outlineWidth={0.1}
                 outlineColor="#000000"
-                font="https://fonts.gstatic.com/s/orbitron/v31/yMJMMIlzdpvBhQQL_SC3X9yhF25-T1nyGy6xpmIyXjU1pg.woff"
             >
                 ISHAAN GARG
             </Text>
