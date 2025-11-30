@@ -52,7 +52,7 @@ export default function Experience() {
             <pointLight position={[-10, 10, -10]} intensity={1} color="#ec4899" />
 
             {/* Environment */}
-            <Stars radius={100} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
+            <Stars radius={100} depth={50} count={1000} factor={4} saturation={0} fade speed={1} />
             <fog attach="fog" args={['#030014', 10, 60]} />
 
             {/* City Content */}
