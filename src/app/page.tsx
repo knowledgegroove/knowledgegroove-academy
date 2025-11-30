@@ -11,19 +11,39 @@ const CityScene = dynamic(() => import('@/components/KnowledgeCity/CityScene'), 
 });
 
 export default function Home() {
-  const [showIntro, setShowIntro] = useState(true);
+  const [introFinished, setIntroFinished] = useState(false);
 
   return (
-    <main style={{ width: '100vw', height: '100vh', background: '#030014', overflow: 'hidden' }}>
-      {showIntro && <IntroAnimation onComplete={() => setShowIntro(false)} />}
+    <main style={{ width: '100vw', height: '100vh', background: '#030014', overflow: 'hidden', position: 'relative' }}>
+
+      {/* City Scene - Always mounted to avoid re-initialization errors and allow preloading */}
       <div style={{
-        opacity: showIntro ? 0 : 1,
-        transition: 'opacity 2s ease-in-out',
+        position: 'absolute',
+        top: 0,
+        left: 0,
         width: '100%',
-        height: '100%'
+        height: '100%',
+        zIndex: 1,
+        opacity: introFinished ? 1 : 0,
+        pointerEvents: introFinished ? 'auto' : 'none',
+        transition: 'opacity 1.5s ease-in-out'
       }}>
-        {!showIntro && <CityScene />}
+        <CityScene />
       </div>
+
+      {/* Intro Animation - Unmounts after completion to cleanup */}
+      {!introFinished && (
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 20
+        }}>
+          <IntroAnimation onComplete={() => setIntroFinished(true)} />
+        </div>
+      )}
     </main>
   );
 }
