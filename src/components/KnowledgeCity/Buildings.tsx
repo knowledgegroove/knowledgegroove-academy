@@ -2,39 +2,8 @@
 
 import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Text, Float, MeshDistortMaterial, Html, RoundedBox, useScroll } from '@react-three/drei';
+import { Text, Float, RoundedBox, useScroll } from '@react-three/drei';
 import * as THREE from 'three';
-
-// Reusable Building Component (Daytime Style)
-export function Building({ position, args, color, delay = 0 }: any) {
-    const mesh = useRef<THREE.Mesh>(null);
-
-    useFrame((state) => {
-        if (mesh.current) {
-            // The animation should affect the local y position of the RoundedBox relative to its parent group.
-            // The base position is handled by the <group position={position}>.
-            mesh.current.position.y = Math.sin(state.clock.elapsedTime + delay) * 0.2;
-        }
-    });
-
-    return (
-        <group position={position}>
-            <RoundedBox args={args} radius={0.1} smoothness={4} ref={mesh}>
-                <meshStandardMaterial
-                    color={color}
-                    roughness={0.3}
-                    metalness={0.2}
-                />
-            </RoundedBox>
-            {/* Glass Windows Effect */}
-            {/* Position relative to the group, args[2]/2 is half the depth, +0.01 to be slightly in front */}
-            <mesh position={[0, 0, args[2] / 2 + 0.01]}>
-                <planeGeometry args={[args[0] * 0.8, args[1] * 0.8]} />
-                <meshStandardMaterial color="#87CEEB" roughness={0.1} metalness={0.9} />
-            </mesh>
-        </group>
-    );
-}
 
 // Road Segment Component
 export function Road({ position, rotation = [0, 0, 0], length = 20 }: any) {
@@ -43,7 +12,7 @@ export function Road({ position, rotation = [0, 0, 0], length = 20 }: any) {
             {/* Road Surface */}
             <mesh rotation={[-Math.PI / 2, 0, 0]}>
                 <planeGeometry args={[4, length]} />
-                <meshStandardMaterial color="#333" roughness={0.8} metalness={0.2} />
+                <meshStandardMaterial color="#333" roughness={0.8} />
             </mesh>
             {/* Road Markings */}
             <MovingMarkings length={length} />
@@ -57,16 +26,10 @@ function MovingMarkings({ length }: { length: number }) {
 
     useFrame(() => {
         if (markings.current) {
-            // Move markings based on scroll offset
-            // scroll.offset goes from 0 to 1
-            // We multiply by a factor to make them loop
             const offset = scroll.offset * 50;
-
             markings.current.children.forEach((child: any, i) => {
-                // Calculate position based on scroll + initial index offset
-                // The modulo operator (%) creates the looping effect
                 const zPos = ((offset + i * 5) % length) - length / 2;
-                child.position.z = -zPos; // Invert if needed for direction
+                child.position.z = -zPos;
             });
         }
     });
@@ -83,187 +46,259 @@ function MovingMarkings({ length }: { length: number }) {
     );
 }
 
+// Podcast District - Giant Microphone with Animated Lights
 export function PodcastDistrict({ position }: { position: [number, number, number] }) {
-    const episodes = [
-        "Rise of Nike", "The Eiffel Tower", "Olympics",
-        "First Airplane", "Silk Road", "Dust Bowl"
-    ];
+    const lightsRef = useRef<THREE.Group>(null);
 
-    return (
-        <group position={position}>
-            <Float speed={2} rotationIntensity={0.2} floatIntensity={0.5}>
-                {/* Main Tower */}
-                <Building position={[0, 4, 0]} args={[4, 8, 4]} color="#a855f7" />
-                {/* Side Towers */}
-                <Building position={[-3, 2, 1]} args={[2, 4, 2]} color="#8b5cf6" delay={1} />
-                <Building position={[3, 3, -1]} args={[2, 6, 2]} color="#d8b4fe" delay={2} />
+    useFrame((state) => {
+        if (lightsRef.current) {
+            lightsRef.current.children.forEach((light: any, i) => {
+                // Pulsing effect with offset for each light
+                const pulse = Math.sin(state.clock.elapsedTime * 2 + i * 0.5) * 0.5 + 0.5;
+                light.intensity = pulse * 2;
+            });
+        }
+    });
 
-                {/* Floating Mic Hologram */}
-                <mesh position={[0, 9, 0]}>
-                    <sphereGeometry args={[0.5, 32, 32]} />
-                    <meshStandardMaterial color="#fff" emissive="#a855f7" emissiveIntensity={2} />
-                </mesh>
-
-                {/* Episode Holograms */}
-                {episodes.map((ep, i) => (
-                    <Text
-                        key={i}
-                        position={[Math.sin(i) * 3, 6 + i * 0.8, Math.cos(i) * 3]}
-                        fontSize={0.3}
-                        color="#d8b4fe"
-                        anchorX="center"
-                        anchorY="middle"
-                        rotation={[0, -Math.atan2(Math.sin(i) * 3, Math.cos(i) * 3), 0]}
-                    >
-                        {ep}
-                    </Text>
-                ))}
-
-                <Text
-                    position={[0, 11, 0]}
-                    fontSize={0.8}
-                    color="white"
-                    anchorX="center"
-                    anchorY="middle"
-                    outlineWidth={0.05}
-                    outlineColor="#a855f7"
-                >
-                    The Knowledge Groove Podcast
-                </Text>
-            </Float>
-        </group>
-    );
-}
-
-export function FinTechDistrict({ position }: { position: [number, number, number] }) {
-    return (
-        <group position={position}>
-            <Float speed={3} rotationIntensity={0.3} floatIntensity={0.4}>
-                {/* Stock Chart Tower */}
-                <Building position={[0, 5, 0]} args={[3, 10, 3]} color="#00C4FF" />
-
-                {/* Data Blocks */}
-                <Building position={[-2.5, 1, 2]} args={[1.5, 2, 1.5]} color="#3b82f6" delay={0.5} />
-                <Building position={[2.5, 2, 2]} args={[1.5, 4, 1.5]} color="#60a5fa" delay={1.5} />
-
-                {/* Massive Hologram Graph */}
-                <group position={[0, 11, 0]}>
-                    <mesh>
-                        <planeGeometry args={[6, 3]} />
-                        <meshBasicMaterial color="#00C4FF" transparent opacity={0.2} side={THREE.DoubleSide} />
-                    </mesh>
-                    <lineSegments>
-                        <edgesGeometry args={[new THREE.PlaneGeometry(6, 3, 10, 5)]} />
-                        <lineBasicMaterial color="#00C4FF" transparent opacity={0.5} />
-                    </lineSegments>
-                    {/* Graph Line */}
-                    <mesh position={[0, 0, 0.1]}>
-                        <torusGeometry args={[1.5, 0.05, 16, 100, Math.PI]} />
-                        <meshBasicMaterial color="#fff" />
-                    </mesh>
-                </group>
-
-                <Text
-                    position={[0, 13.5, 0]}
-                    fontSize={0.8}
-                    color="white"
-                    anchorX="center"
-                    anchorY="middle"
-                    outlineWidth={0.05}
-                    outlineColor="#00C4FF"
-                >
-                    Knowledge Groove AI + FinTech Lab
-                </Text>
-            </Float>
-        </group>
-    );
-}
-
-export function AcademyDistrict({ position }: { position: [number, number, number] }) {
-    const words = ["Confidence", "Fluency", "STEM Skills"];
-
-    return (
-        <group position={position}>
-            <Float speed={2} rotationIntensity={0.1} floatIntensity={0.6}>
-                {/* Campus Buildings */}
-                <Building position={[0, 3, 0]} args={[6, 4, 4]} color="#ec4899" /> {/* Classroom Block */}
-                <Building position={[-4, 4, 0]} args={[2, 6, 2]} color="#f472b6" delay={1} /> {/* Speech Tower */}
-                <Building position={[4, 2, 0]} args={[3, 3, 3]} color="#fbcfe8" delay={2} /> {/* Workshop */}
-
-                {/* Floating Words */}
-                {words.map((word, i) => (
-                    <Text
-                        key={i}
-                        position={[Math.sin(i * 2) * 4, 7 + i, 0]}
-                        fontSize={0.5}
-                        color="#fbcfe8"
-                        anchorX="center"
-                        anchorY="middle"
-                    >
-                        {word}
-                    </Text>
-                ))}
-
-                <Text
-                    position={[0, 9, 0]}
-                    fontSize={0.8}
-                    color="white"
-                    anchorX="center"
-                    anchorY="middle"
-                    outlineWidth={0.05}
-                    outlineColor="#ec4899"
-                >
-                    Knowledge Groove Academy
-                </Text>
-            </Float>
-        </group>
-    );
-}
-
-export function CreatorTower({ position }: { position: [number, number, number] }) {
     return (
         <group position={position}>
             <Float speed={1.5} rotationIntensity={0.1} floatIntensity={0.3}>
-                {/* Main HQ Tower */}
-                <Building position={[0, 8, 0]} args={[4, 16, 4]} color="#E4F2FF" />
-
-                {/* Floating Icons (Represented by simple shapes for performance) */}
-                <group position={[0, 10, 0]}>
-                    {/* Mic */}
-                    <mesh position={[3, 0, 0]}>
-                        <capsuleGeometry args={[0.3, 1, 4, 8]} />
-                        <meshStandardMaterial color="#a855f7" />
-                    </mesh>
-                    {/* Chart */}
-                    <mesh position={[-3, 2, 1]}>
-                        <boxGeometry args={[1, 1, 0.1]} />
-                        <meshStandardMaterial color="#00C4FF" />
-                    </mesh>
-                    {/* Book */}
-                    <mesh position={[2, 4, -2]}>
-                        <boxGeometry args={[1, 1.2, 0.3]} />
-                        <meshStandardMaterial color="#ec4899" />
-                    </mesh>
-                </group>
-
-                {/* Spotlight Beam */}
-                <mesh position={[0, 18, 0]} rotation={[0, 0, 0]}>
-                    <cylinderGeometry args={[0.1, 4, 10, 32, 1, true]} />
-                    <meshBasicMaterial color="#fff" transparent opacity={0.1} side={THREE.DoubleSide} />
+                {/* Microphone Base */}
+                <mesh position={[0, 1, 0]}>
+                    <cylinderGeometry args={[0.8, 1.2, 2, 16]} />
+                    <meshStandardMaterial color="#2d2d2d" metalness={0.8} roughness={0.2} />
                 </mesh>
 
-                <Text
-                    position={[0, 19, 0]}
-                    fontSize={1.2}
-                    color="white"
-                    anchorX="center"
-                    anchorY="middle"
-                    outlineWidth={0.05}
-                    outlineColor="#000"
-                >
-                    I'm Ishaan Garg
-                </Text>
+                {/* Microphone Body */}
+                <mesh position={[0, 4, 0]}>
+                    <cylinderGeometry args={[1.5, 1.5, 6, 16]} />
+                    <meshStandardMaterial color="#1a1a1a" metalness={0.9} roughness={0.1} />
+                </mesh>
+
+                {/* Microphone Grille/Head */}
+                <mesh position={[0, 7.5, 0]}>
+                    <sphereGeometry args={[2, 16, 16]} />
+                    <meshStandardMaterial color="#a855f7" metalness={0.6} roughness={0.3} />
+                </mesh>
+
+                {/* Animated Light Rings */}
+                <group ref={lightsRef}>
+                    <pointLight position={[0, 3, 0]} color="#ff00ff" distance={10} />
+                    <pointLight position={[0, 5, 0]} color="#00ffff" distance={10} />
+                    <pointLight position={[0, 7, 0]} color="#ffff00" distance={10} />
+                </group>
+
+                {/* Glowing Rings on Mic */}
+                {[3, 5, 7].map((y, i) => (
+                    <mesh key={i} position={[0, y, 0]}>
+                        <torusGeometry args={[1.6, 0.1, 8, 32]} />
+                        <meshBasicMaterial color={['#ff00ff', '#00ffff', '#ffff00'][i]} />
+                    </mesh>
+                ))}
             </Float>
+
+            {/* Label */}
+            <Text
+                position={[0, 0.5, 0]}
+                fontSize={0.5}
+                color="#a855f7"
+                anchorX="center"
+                anchorY="middle"
+            >
+                The Knowledge Groove Podcast
+            </Text>
+        </group>
+    );
+}
+
+// FinTech District - Financial Skyscrapers
+export function FinTechDistrict({ position }: { position: [number, number, number] }) {
+    const dataRef = useRef<THREE.Group>(null);
+
+    useFrame((state) => {
+        if (dataRef.current) {
+            dataRef.current.rotation.y = state.clock.elapsedTime * 0.5;
+        }
+    });
+
+    return (
+        <group position={position}>
+            {/* Tall Skyscrapers */}
+            <Float speed={1} rotationIntensity={0.05} floatIntensity={0.2}>
+                {/* Main Tower */}
+                <mesh position={[0, 8, 0]}>
+                    <boxGeometry args={[2, 16, 2]} />
+                    <meshStandardMaterial color="#00C4FF" metalness={0.8} roughness={0.2} />
+                </mesh>
+
+                {/* Left Tower */}
+                <mesh position={[-3, 6, 0]}>
+                    <boxGeometry args={[1.5, 12, 1.5]} />
+                    <meshStandardMaterial color="#0099cc" metalness={0.8} roughness={0.2} />
+                </mesh>
+
+                {/* Right Tower */}
+                <mesh position={[3, 7, 0]}>
+                    <boxGeometry args={[1.8, 14, 1.8]} />
+                    <meshStandardMaterial color="#0077aa" metalness={0.8} roughness={0.2} />
+                </mesh>
+
+                {/* Back Towers */}
+                <mesh position={[-1.5, 5, -2]}>
+                    <boxGeometry args={[1.2, 10, 1.2]} />
+                    <meshStandardMaterial color="#005588" metalness={0.8} roughness={0.2} />
+                </mesh>
+                <mesh position={[1.5, 5.5, -2]}>
+                    <boxGeometry args={[1.3, 11, 1.3]} />
+                    <meshStandardMaterial color="#006699" metalness={0.8} roughness={0.2} />
+                </mesh>
+
+                {/* Windows on main tower */}
+                {[...Array(8)].map((_, i) => (
+                    <mesh key={i} position={[0, 2 + i * 2, 1.01]}>
+                        <planeGeometry args={[1.5, 1.5]} />
+                        <meshBasicMaterial color="#ffff00" opacity={0.8} transparent />
+                    </mesh>
+                ))}
+            </Float>
+
+            {/* Rotating Data Visualization */}
+            <group ref={dataRef} position={[0, 16, 0]}>
+                <mesh>
+                    <torusGeometry args={[2, 0.1, 16, 32]} />
+                    <meshBasicMaterial color="#00ffff" />
+                </mesh>
+                <mesh rotation={[Math.PI / 2, 0, 0]}>
+                    <torusGeometry args={[2, 0.1, 16, 32]} />
+                    <meshBasicMaterial color="#00ffff" />
+                </mesh>
+            </group>
+
+            {/* Label */}
+            <Text
+                position={[0, 0.5, 0]}
+                fontSize={0.5}
+                color="#00C4FF"
+                anchorX="center"
+                anchorY="middle"
+            >
+                AI + FinTech Lab
+            </Text>
+        </group>
+    );
+}
+
+// Academy District - Classroom with Students
+export function AcademyDistrict({ position }: { position: [number, number, number] }) {
+    const handsRef = useRef<THREE.Group>(null);
+
+    useFrame((state) => {
+        if (handsRef.current) {
+            handsRef.current.children.forEach((hand: any, i) => {
+                // Hands raise and lower at different times
+                const wave = Math.sin(state.clock.elapsedTime * 1.5 + i) * 0.3 + 0.3;
+                hand.position.y = 1.5 + wave;
+            });
+        }
+    });
+
+    return (
+        <group position={position}>
+            <Float speed={1} rotationIntensity={0.1} floatIntensity={0.2}>
+                {/* Classroom Building */}
+                <mesh position={[0, 2, 0]}>
+                    <boxGeometry args={[8, 4, 6]} />
+                    <meshStandardMaterial color="#ec4899" roughness={0.3} />
+                </mesh>
+
+                {/* Roof */}
+                <mesh position={[0, 4.5, 0]} rotation={[0, Math.PI / 4, 0]}>
+                    <coneGeometry args={[5, 2, 4]} />
+                    <meshStandardMaterial color="#be185d" roughness={0.4} />
+                </mesh>
+
+                {/* Blackboard */}
+                <mesh position={[0, 2.5, -2.9]}>
+                    <planeGeometry args={[3, 1.5]} />
+                    <meshStandardMaterial color="#1a1a1a" />
+                </mesh>
+
+                {/* Desks (rows of students) */}
+                {[...Array(3)].map((_, row) => (
+                    <group key={row} position={[0, 0, row * 1.5 - 1]}>
+                        {[...Array(4)].map((_, col) => (
+                            <group key={col} position={[col * 1.8 - 2.7, 0.5, 0]}>
+                                {/* Desk */}
+                                <mesh>
+                                    <boxGeometry args={[0.8, 0.1, 0.6]} />
+                                    <meshStandardMaterial color="#8b4513" />
+                                </mesh>
+                                {/* Student (simple figure) */}
+                                <mesh position={[0, 0.5, 0]}>
+                                    <sphereGeometry args={[0.2, 8, 8]} />
+                                    <meshStandardMaterial color="#ffd700" />
+                                </mesh>
+                            </group>
+                        ))}
+                    </group>
+                ))}
+            </Float>
+
+            {/* Animated Raised Hands */}
+            <group ref={handsRef}>
+                {[[-2, 0, 0], [0, 0, 0.5], [1.5, 0, -0.5]].map((pos, i) => (
+                    <mesh key={i} position={pos as any}>
+                        <sphereGeometry args={[0.15, 8, 8]} />
+                        <meshStandardMaterial color="#ffb6c1" emissive="#ff69b4" emissiveIntensity={0.5} />
+                    </mesh>
+                ))}
+            </group>
+
+            {/* Label */}
+            <Text
+                position={[0, 0.3, 0]}
+                fontSize={0.5}
+                color="#ec4899"
+                anchorX="center"
+                anchorY="middle"
+            >
+                Knowledge Groove Academy
+            </Text>
+        </group>
+    );
+}
+
+// Creator Tower - Keep existing
+export function CreatorTower({ position }: { position: [number, number, number] }) {
+    return (
+        <group position={position}>
+            <Float speed={1.5} rotationIntensity={0.3} floatIntensity={0.4}>
+                {/* Main Tower */}
+                <mesh position={[0, 10, 0]}>
+                    <cylinderGeometry args={[2, 3, 20, 8]} />
+                    <meshStandardMaterial color="#fbbf24" metalness={0.7} roughness={0.2} />
+                </mesh>
+
+                {/* Top Sphere */}
+                <mesh position={[0, 21, 0]}>
+                    <sphereGeometry args={[3, 16, 16]} />
+                    <meshStandardMaterial color="#f59e0b" metalness={0.8} roughness={0.1} />
+                </mesh>
+
+                {/* Spotlight */}
+                <pointLight position={[0, 22, 0]} intensity={2} color="#fbbf24" distance={20} />
+            </Float>
+
+            {/* Label */}
+            <Text
+                position={[0, 1, 0]}
+                fontSize={0.6}
+                color="#fbbf24"
+                anchorX="center"
+                anchorY="middle"
+            >
+                I'm Ishaan Garg
+            </Text>
         </group>
     );
 }
