@@ -109,13 +109,27 @@ export function PodcastDistrict({ position }: { position: [number, number, numbe
                 </group>
             </Float>
 
-            {/* Label */}
+            {/* Large Visible Label */}
             <Text
-                position={[0, 0.5, 0]}
-                fontSize={0.5}
+                position={[0, 10, 0]}
+                fontSize={1.5}
                 color="#a855f7"
                 anchorX="center"
                 anchorY="middle"
+                outlineWidth={0.1}
+                outlineColor="#000000"
+                font="https://fonts.gstatic.com/s/orbitron/v31/yMJMMIlzdpvBhQQL_SC3X9yhF25-T1nyGy6xpmIyXjU1pg.woff"
+            >
+                PODCAST
+            </Text>
+            <Text
+                position={[0, 0.5, 0]}
+                fontSize={0.4}
+                color="#d8b4fe"
+                anchorX="center"
+                anchorY="middle"
+                outlineWidth={0.02}
+                outlineColor="#000000"
             >
                 The Knowledge Groove Podcast
             </Text>
@@ -203,13 +217,27 @@ export function FinTechDistrict({ position }: { position: [number, number, numbe
                 </mesh>
             </group>
 
-            {/* Label */}
+            {/* Large Visible Label */}
             <Text
-                position={[0, 0.5, 0]}
-                fontSize={0.5}
+                position={[0, 22, 2]}
+                fontSize={1.5}
                 color="#00C4FF"
                 anchorX="center"
                 anchorY="middle"
+                outlineWidth={0.1}
+                outlineColor="#000000"
+                font="https://fonts.gstatic.com/s/orbitron/v31/yMJMMIlzdpvBhQQL_SC3X9yhF25-T1nyGy6xpmIyXjU1pg.woff"
+            >
+                AI + FINTECH
+            </Text>
+            <Text
+                position={[0, 0.5, 0]}
+                fontSize={0.4}
+                color="#7dd3fc"
+                anchorX="center"
+                anchorY="middle"
+                outlineWidth={0.02}
+                outlineColor="#000000"
             >
                 AI + FinTech Lab
             </Text>
@@ -283,13 +311,27 @@ export function AcademyDistrict({ position }: { position: [number, number, numbe
                 ))}
             </group>
 
-            {/* Label */}
+            {/* Large Visible Label */}
             <Text
-                position={[0, 0.3, 0]}
-                fontSize={0.5}
+                position={[0, 6, 0]}
+                fontSize={1.5}
                 color="#ec4899"
                 anchorX="center"
                 anchorY="middle"
+                outlineWidth={0.1}
+                outlineColor="#000000"
+                font="https://fonts.gstatic.com/s/orbitron/v31/yMJMMIlzdpvBhQQL_SC3X9yhF25-T1nyGy6xpmIyXjU1pg.woff"
+            >
+                ACADEMY
+            </Text>
+            <Text
+                position={[0, 0.3, 0]}
+                fontSize={0.4}
+                color="#fbcfe8"
+                anchorX="center"
+                anchorY="middle"
+                outlineWidth={0.02}
+                outlineColor="#000000"
             >
                 Knowledge Groove Academy
             </Text>
@@ -365,15 +407,29 @@ export function CreatorTower({ position }: { position: [number, number, number] 
                 </mesh>
             </Float>
 
-            {/* Label */}
+            {/* Large Visible Label */}
             <Text
-                position={[0, 0.8, 0]}
-                fontSize={0.6}
+                position={[0, 19, 0]}
+                fontSize={1.5}
                 color="#fbbf24"
                 anchorX="center"
                 anchorY="middle"
+                outlineWidth={0.1}
+                outlineColor="#000000"
+                font="https://fonts.gstatic.com/s/orbitron/v31/yMJMMIlzdpvBhQQL_SC3X9yhF25-T1nyGy6xpmIyXjU1pg.woff"
             >
-                I'm Ishaan Garg
+                ISHAAN GARG
+            </Text>
+            <Text
+                position={[0, 0.8, 0]}
+                fontSize={0.5}
+                color="#fde68a"
+                anchorX="center"
+                anchorY="middle"
+                outlineWidth={0.03}
+                outlineColor="#000000"
+            >
+                Creator & Innovator
             </Text>
         </group>
     );
