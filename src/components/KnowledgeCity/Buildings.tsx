@@ -46,7 +46,7 @@ function MovingMarkings({ length }: { length: number }) {
     );
 }
 
-// Podcast District - Giant Microphone with Animated Lights
+// Podcast District - Building with Light Microphone Design
 export function PodcastDistrict({ position }: { position: [number, number, number] }) {
     const lightsRef = useRef<THREE.Group>(null);
 
@@ -54,47 +54,59 @@ export function PodcastDistrict({ position }: { position: [number, number, numbe
         if (lightsRef.current) {
             lightsRef.current.children.forEach((light: any, i) => {
                 // Pulsing effect with offset for each light
-                const pulse = Math.sin(state.clock.elapsedTime * 2 + i * 0.5) * 0.5 + 0.5;
-                light.intensity = pulse * 2;
+                const pulse = Math.sin(state.clock.elapsedTime * 2 + i * 0.8) * 0.5 + 0.5;
+                if (light.intensity !== undefined) {
+                    light.intensity = pulse * 3;
+                }
             });
         }
     });
 
     return (
         <group position={position}>
-            <Float speed={1.5} rotationIntensity={0.1} floatIntensity={0.3}>
-                {/* Microphone Base */}
-                <mesh position={[0, 1, 0]}>
-                    <cylinderGeometry args={[0.8, 1.2, 2, 16]} />
-                    <meshStandardMaterial color="#2d2d2d" metalness={0.8} roughness={0.2} />
-                </mesh>
-
-                {/* Microphone Body */}
+            <Float speed={1} rotationIntensity={0.05} floatIntensity={0.2}>
+                {/* Main Building */}
                 <mesh position={[0, 4, 0]}>
-                    <cylinderGeometry args={[1.5, 1.5, 6, 16]} />
-                    <meshStandardMaterial color="#1a1a1a" metalness={0.9} roughness={0.1} />
+                    <boxGeometry args={[6, 8, 4]} />
+                    <meshStandardMaterial color="#7c3aed" metalness={0.3} roughness={0.4} />
                 </mesh>
 
-                {/* Microphone Grille/Head */}
-                <mesh position={[0, 7.5, 0]}>
-                    <sphereGeometry args={[2, 16, 16]} />
-                    <meshStandardMaterial color="#a855f7" metalness={0.6} roughness={0.3} />
-                </mesh>
-
-                {/* Animated Light Rings */}
-                <group ref={lightsRef}>
-                    <pointLight position={[0, 3, 0]} color="#ff00ff" distance={10} />
-                    <pointLight position={[0, 5, 0]} color="#00ffff" distance={10} />
-                    <pointLight position={[0, 7, 0]} color="#ffff00" distance={10} />
-                </group>
-
-                {/* Glowing Rings on Mic */}
-                {[3, 5, 7].map((y, i) => (
-                    <mesh key={i} position={[0, y, 0]}>
-                        <torusGeometry args={[1.6, 0.1, 8, 32]} />
-                        <meshBasicMaterial color={['#ff00ff', '#00ffff', '#ffff00'][i]} />
-                    </mesh>
+                {/* Windows */}
+                {[...Array(4)].map((_, floor) => (
+                    <group key={floor}>
+                        {[...Array(3)].map((_, col) => (
+                            <mesh key={col} position={[col * 1.8 - 1.8, floor * 1.8 + 1, 2.01]}>
+                                <planeGeometry args={[0.8, 1.2]} />
+                                <meshBasicMaterial color="#ffeb3b" opacity={0.6} transparent />
+                            </mesh>
+                        ))}
+                    </group>
                 ))}
+
+                {/* Microphone Design Made with Lights on Front */}
+                <group ref={lightsRef} position={[0, 4, 2.5]}>
+                    {/* Mic Body - Vertical Line of Lights */}
+                    {[...Array(5)].map((_, i) => (
+                        <pointLight key={`body-${i}`} position={[0, i * 0.8 - 1.5, 0]} color="#a855f7" distance={3} />
+                    ))}
+
+                    {/* Mic Head - Circle of Lights */}
+                    {[...Array(8)].map((_, i) => {
+                        const angle = (i / 8) * Math.PI * 2;
+                        return (
+                            <pointLight
+                                key={`head-${i}`}
+                                position={[Math.cos(angle) * 0.8, 2 + Math.sin(angle) * 0.8, 0]}
+                                color="#d946ef"
+                                distance={2}
+                            />
+                        );
+                    })}
+
+                    {/* Base Lights */}
+                    <pointLight position={[-0.3, -2, 0]} color="#a855f7" distance={2} />
+                    <pointLight position={[0.3, -2, 0]} color="#a855f7" distance={2} />
+                </group>
             </Float>
 
             {/* Label */}
@@ -111,7 +123,7 @@ export function PodcastDistrict({ position }: { position: [number, number, numbe
     );
 }
 
-// FinTech District - Financial Skyscrapers
+// FinTech District - Wall Street Style
 export function FinTechDistrict({ position }: { position: [number, number, number] }) {
     const dataRef = useRef<THREE.Group>(null);
 
@@ -123,47 +135,64 @@ export function FinTechDistrict({ position }: { position: [number, number, numbe
 
     return (
         <group position={position}>
-            {/* Tall Skyscrapers */}
-            <Float speed={1} rotationIntensity={0.05} floatIntensity={0.2}>
-                {/* Main Tower */}
-                <mesh position={[0, 8, 0]}>
-                    <boxGeometry args={[2, 16, 2]} />
-                    <meshStandardMaterial color="#00C4FF" metalness={0.8} roughness={0.2} />
+            <Float speed={0.8} rotationIntensity={0.03} floatIntensity={0.15}>
+                {/* Front Row - Tallest Buildings */}
+                <mesh position={[0, 10, 2]}>
+                    <boxGeometry args={[2.5, 20, 2.5]} />
+                    <meshStandardMaterial color="#00C4FF" metalness={0.9} roughness={0.1} />
+                </mesh>
+                <mesh position={[-4, 9, 2]}>
+                    <boxGeometry args={[2, 18, 2]} />
+                    <meshStandardMaterial color="#0099cc" metalness={0.9} roughness={0.1} />
+                </mesh>
+                <mesh position={[4, 8.5, 2]}>
+                    <boxGeometry args={[2.2, 17, 2.2]} />
+                    <meshStandardMaterial color="#0088bb" metalness={0.9} roughness={0.1} />
                 </mesh>
 
-                {/* Left Tower */}
-                <mesh position={[-3, 6, 0]}>
-                    <boxGeometry args={[1.5, 12, 1.5]} />
-                    <meshStandardMaterial color="#0099cc" metalness={0.8} roughness={0.2} />
-                </mesh>
-
-                {/* Right Tower */}
-                <mesh position={[3, 7, 0]}>
+                {/* Middle Row */}
+                <mesh position={[-2.5, 7, 0]}>
                     <boxGeometry args={[1.8, 14, 1.8]} />
-                    <meshStandardMaterial color="#0077aa" metalness={0.8} roughness={0.2} />
+                    <meshStandardMaterial color="#0077aa" metalness={0.9} roughness={0.1} />
+                </mesh>
+                <mesh position={[2.5, 7.5, 0]}>
+                    <boxGeometry args={[1.9, 15, 1.9]} />
+                    <meshStandardMaterial color="#006699" metalness={0.9} roughness={0.1} />
+                </mesh>
+                <mesh position={[-6, 6, 0]}>
+                    <boxGeometry args={[1.6, 12, 1.6]} />
+                    <meshStandardMaterial color="#005588" metalness={0.9} roughness={0.1} />
+                </mesh>
+                <mesh position={[6, 6.5, 0]}>
+                    <boxGeometry args={[1.7, 13, 1.7]} />
+                    <meshStandardMaterial color="#004477" metalness={0.9} roughness={0.1} />
                 </mesh>
 
-                {/* Back Towers */}
-                <mesh position={[-1.5, 5, -2]}>
-                    <boxGeometry args={[1.2, 10, 1.2]} />
-                    <meshStandardMaterial color="#005588" metalness={0.8} roughness={0.2} />
+                {/* Back Row */}
+                <mesh position={[-3.5, 5, -2]}>
+                    <boxGeometry args={[1.5, 10, 1.5]} />
+                    <meshStandardMaterial color="#003366" metalness={0.9} roughness={0.1} />
                 </mesh>
-                <mesh position={[1.5, 5.5, -2]}>
-                    <boxGeometry args={[1.3, 11, 1.3]} />
-                    <meshStandardMaterial color="#006699" metalness={0.8} roughness={0.2} />
+                <mesh position={[0, 5.5, -2]}>
+                    <boxGeometry args={[1.6, 11, 1.6]} />
+                    <meshStandardMaterial color="#002255" metalness={0.9} roughness={0.1} />
+                </mesh>
+                <mesh position={[3.5, 5, -2]}>
+                    <boxGeometry args={[1.5, 10, 1.5]} />
+                    <meshStandardMaterial color="#003366" metalness={0.9} roughness={0.1} />
                 </mesh>
 
-                {/* Windows on main tower */}
-                {[...Array(8)].map((_, i) => (
-                    <mesh key={i} position={[0, 2 + i * 2, 1.01]}>
-                        <planeGeometry args={[1.5, 1.5]} />
-                        <meshBasicMaterial color="#ffff00" opacity={0.8} transparent />
+                {/* Windows on tallest building */}
+                {[...Array(10)].map((_, i) => (
+                    <mesh key={i} position={[0, 2 + i * 1.8, 3.26]}>
+                        <planeGeometry args={[2, 1.5]} />
+                        <meshBasicMaterial color="#ffeb3b" opacity={0.7} transparent />
                     </mesh>
                 ))}
             </Float>
 
             {/* Rotating Data Visualization */}
-            <group ref={dataRef} position={[0, 16, 0]}>
+            <group ref={dataRef} position={[0, 20, 2]}>
                 <mesh>
                     <torusGeometry args={[2, 0.1, 16, 32]} />
                     <meshBasicMaterial color="#00ffff" />
@@ -268,30 +297,77 @@ export function AcademyDistrict({ position }: { position: [number, number, numbe
     );
 }
 
-// Creator Tower - Keep existing
+// Creator Tower - Modern Professional Building
 export function CreatorTower({ position }: { position: [number, number, number] }) {
+    const lightsRef = useRef<THREE.Group>(null);
+
+    useFrame((state) => {
+        if (lightsRef.current) {
+            lightsRef.current.rotation.y = state.clock.elapsedTime * 0.3;
+        }
+    });
+
     return (
         <group position={position}>
-            <Float speed={1.5} rotationIntensity={0.3} floatIntensity={0.4}>
-                {/* Main Tower */}
-                <mesh position={[0, 10, 0]}>
-                    <cylinderGeometry args={[2, 3, 20, 8]} />
-                    <meshStandardMaterial color="#fbbf24" metalness={0.7} roughness={0.2} />
+            <Float speed={1} rotationIntensity={0.05} floatIntensity={0.2}>
+                {/* Main Glass Tower */}
+                <mesh position={[0, 8, 0]}>
+                    <boxGeometry args={[5, 16, 5]} />
+                    <meshStandardMaterial
+                        color="#fbbf24"
+                        metalness={0.9}
+                        roughness={0.1}
+                        transparent
+                        opacity={0.9}
+                    />
                 </mesh>
 
-                {/* Top Sphere */}
-                <mesh position={[0, 21, 0]}>
-                    <sphereGeometry args={[3, 16, 16]} />
-                    <meshStandardMaterial color="#f59e0b" metalness={0.8} roughness={0.1} />
+                {/* Glass Panels/Windows */}
+                {[...Array(8)].map((_, floor) => (
+                    <group key={floor}>
+                        {/* Front windows */}
+                        <mesh position={[0, floor * 2 + 1, 2.51]}>
+                            <planeGeometry args={[4, 1.8]} />
+                            <meshBasicMaterial color="#fff8dc" opacity={0.8} transparent />
+                        </mesh>
+                        {/* Side windows */}
+                        <mesh position={[-2.51, floor * 2 + 1, 0]} rotation={[0, Math.PI / 2, 0]}>
+                            <planeGeometry args={[4, 1.8]} />
+                            <meshBasicMaterial color="#fff8dc" opacity={0.7} transparent />
+                        </mesh>
+                        <mesh position={[2.51, floor * 2 + 1, 0]} rotation={[0, -Math.PI / 2, 0]}>
+                            <planeGeometry args={[4, 1.8]} />
+                            <meshBasicMaterial color="#fff8dc" opacity={0.7} transparent />
+                        </mesh>
+                    </group>
+                ))}
+
+                {/* Top Crown/Spire */}
+                <mesh position={[0, 17, 0]}>
+                    <coneGeometry args={[3, 3, 4]} />
+                    <meshStandardMaterial color="#f59e0b" metalness={0.9} roughness={0.1} />
                 </mesh>
 
-                {/* Spotlight */}
-                <pointLight position={[0, 22, 0]} intensity={2} color="#fbbf24" distance={20} />
+                {/* Rotating Light Ring at Top */}
+                <group ref={lightsRef} position={[0, 16, 0]}>
+                    <mesh>
+                        <torusGeometry args={[3, 0.15, 16, 32]} />
+                        <meshBasicMaterial color="#fbbf24" />
+                    </mesh>
+                    <pointLight position={[3, 0, 0]} color="#fbbf24" intensity={2} distance={10} />
+                    <pointLight position={[-3, 0, 0]} color="#f59e0b" intensity={2} distance={10} />
+                </group>
+
+                {/* Base Platform */}
+                <mesh position={[0, 0.2, 0]}>
+                    <cylinderGeometry args={[4, 4.5, 0.4, 32]} />
+                    <meshStandardMaterial color="#d97706" metalness={0.6} roughness={0.3} />
+                </mesh>
             </Float>
 
             {/* Label */}
             <Text
-                position={[0, 1, 0]}
+                position={[0, 0.8, 0]}
                 fontSize={0.6}
                 color="#fbbf24"
                 anchorX="center"
