@@ -54,12 +54,24 @@ export default function Experience() {
                 rayleigh={2}
             />
 
-            {/* Volumetric Clouds */}
-            <Cloud position={[-20, 15, -40]} speed={0.1} opacity={0.4} color="#ffb380" />
-            <Cloud position={[25, 18, -60]} speed={0.15} opacity={0.3} color="#ffa060" />
-            <Cloud position={[-15, 20, -80]} speed={0.12} opacity={0.35} color="#ff9050" />
-            <Cloud position={[30, 16, -100]} speed={0.08} opacity={0.4} color="#ffb890" />
+            {/* Volumetric Clouds - Distributed along the entire path */}
+            {/* Near clouds */}
+            <Cloud position={[-20, 15, -10]} speed={0.1} opacity={0.4} color="#ffb380" />
+            <Cloud position={[25, 18, -25]} speed={0.15} opacity={0.3} color="#ffa060" />
 
+            {/* Mid-range clouds */}
+            <Cloud position={[-15, 20, -45]} speed={0.12} opacity={0.35} color="#ff9050" />
+            <Cloud position={[30, 16, -55]} speed={0.08} opacity={0.4} color="#ffb890" />
+            <Cloud position={[-25, 22, -70]} speed={0.1} opacity={0.35} color="#ffb380" />
+
+            {/* Far clouds */}
+            <Cloud position={[20, 19, -85]} speed={0.09} opacity={0.3} color="#ffa060" />
+            <Cloud position={[-18, 17, -95]} speed={0.11} opacity={0.38} color="#ff9050" />
+            <Cloud position={[28, 21, -110]} speed={0.13} opacity={0.32} color="#ffb890" />
+
+            {/* Very far clouds for depth */}
+            <Cloud position={[-22, 18, -125]} speed={0.08} opacity={0.3} color="#ffb380" />
+            <Cloud position={[15, 20, -135]} speed={0.1} opacity={0.35} color="#ffa060" />
             {/* Warm Sunset Lighting */}
             <ambientLight intensity={0.6} color="#ffe4b5" />
             <directionalLight

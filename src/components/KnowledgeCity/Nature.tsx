@@ -112,24 +112,86 @@ export function Trees({ count = 50, area = 100 }: { count?: number, area?: numbe
 }
 
 export function Mountains() {
+    // Create trees for mountain slopes
+    const mountainTrees = useMemo(() => {
+        const temp = [];
+        for (let i = 0; i < 80; i++) {
+            // Distribute trees on mountain slopes
+            const side = Math.random() > 0.5 ? -1 : 1;
+            const x = side * (30 + Math.random() * 40);
+            const z = -80 - Math.random() * 40;
+            const y = Math.random() * 8; // Trees at various elevations
+            const scale = 0.8 + Math.random() * 0.5;
+            temp.push({ position: [x, y, z], scale });
+        }
+        return temp;
+    }, []);
+
     return (
-        <group position={[0, -1, -100]}>
-            {/* Background Mountains */}
-            <mesh position={[-40, 0, 0]} rotation={[0, 0, 0]}>
-                <coneGeometry args={[30, 40, 4]} />
-                <meshStandardMaterial color="#5a6e7c" roughness={0.8} />
+        <group position={[0, 0, -100]}>
+            {/* Rolling Hills - Left Side */}
+            <mesh position={[-45, -2, -10]} rotation={[0, 0.3, 0]}>
+                <sphereGeometry args={[25, 16, 16, 0, Math.PI]} />
+                <meshStandardMaterial color="#6b8e5a" roughness={0.85} />
             </mesh>
-            <mesh position={[40, 0, 10]} rotation={[0, 0, 0]}>
-                <coneGeometry args={[25, 35, 4]} />
-                <meshStandardMaterial color="#6b7f8c" roughness={0.8} />
+            <mesh position={[-35, -3, -25]} rotation={[0, 0.2, 0]}>
+                <sphereGeometry args={[20, 16, 16, 0, Math.PI]} />
+                <meshStandardMaterial color="#5a7d49" roughness={0.85} />
             </mesh>
-            <mesh position={[0, 0, -20]} rotation={[0, 0, 0]}>
-                <coneGeometry args={[50, 50, 4]} />
-                <meshStandardMaterial color="#7c90a0" roughness={0.8} />
+
+            {/* Rolling Hills - Right Side */}
+            <mesh position={[45, -2, -15]} rotation={[0, -0.3, 0]}>
+                <sphereGeometry args={[22, 16, 16, 0, Math.PI]} />
+                <meshStandardMaterial color="#6b8e5a" roughness={0.85} />
             </mesh>
+            <mesh position={[38, -3, -30]} rotation={[0, -0.2, 0]}>
+                <sphereGeometry args={[18, 16, 16, 0, Math.PI]} />
+                <meshStandardMaterial color="#5a7d49" roughness={0.85} />
+            </mesh>
+
+            {/* Distant Mountains - More Natural Shapes */}
+            <mesh position={[-50, 5, -50]} rotation={[0, 0.1, 0]}>
+                <sphereGeometry args={[35, 16, 16, 0, Math.PI * 0.6]} />
+                <meshStandardMaterial color="#7c9a6d" roughness={0.9} />
+            </mesh>
+            <mesh position={[0, 8, -60]} rotation={[0, 0, 0]}>
+                <sphereGeometry args={[45, 16, 16, 0, Math.PI * 0.55]} />
+                <meshStandardMaterial color="#8aa87a" roughness={0.9} />
+            </mesh>
+            <mesh position={[55, 6, -55]} rotation={[0, -0.15, 0]}>
+                <sphereGeometry args={[32, 16, 16, 0, Math.PI * 0.58]} />
+                <meshStandardMaterial color="#7c9a6d" roughness={0.9} />
+            </mesh>
+
+            {/* Trees on Mountain Slopes */}
+            <Instances range={mountainTrees.length}>
+                <cylinderGeometry args={[0.2, 0.3, 2, 6]} />
+                <meshStandardMaterial color="#3d2817" roughness={0.95} />
+                {mountainTrees.map((data, i) => (
+                    <Instance
+                        key={i}
+                        position={data.position as any}
+                        scale={[data.scale, data.scale, data.scale] as any}
+                    />
+                ))}
+            </Instances>
+
+            {/* Tree Foliage on Mountains */}
+            <Instances range={mountainTrees.length}>
+                <coneGeometry args={[1.2, 3, 6]} />
+                <meshStandardMaterial color="#2d5016" roughness={0.85} />
+                {mountainTrees.map((data, i) => (
+                    <Instance
+                        key={i}
+                        position={[data.position[0], data.position[1] + 2, data.position[2]] as any}
+                        scale={[data.scale, data.scale, data.scale] as any}
+                    />
+                ))}
+            </Instances>
         </group>
     );
 }
+
 
 // Smaller, more realistic car component
 function Car({ position, color }: { position: [number, number, number], color: string }) {
