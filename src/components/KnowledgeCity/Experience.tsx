@@ -1,11 +1,9 @@
-'use client';
-
 import { useScroll, Sky, Environment, PerspectiveCamera } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useRef, useMemo } from 'react';
 import * as THREE from 'three';
 import { PodcastDistrict, FinTechDistrict, AcademyDistrict, CreatorTower, Road } from './Buildings';
-import { Trees, Mountains } from './Nature';
+import { Trees, Mountains, HighwayCars } from './Nature';
 
 export default function Experience() {
     const scroll = useScroll();
@@ -67,6 +65,9 @@ export default function Experience() {
                 {/* Nature */}
                 <Trees count={100} area={150} />
                 <Mountains />
+
+                {/* Highway Cars */}
+                <HighwayCars />
 
                 {/* Roads - Continuous Straight Line */}
                 <Road position={[0, 0.1, -20]} length={40} />
