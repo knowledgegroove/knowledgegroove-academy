@@ -11,55 +11,101 @@ export function Trees({ count = 50, area = 100 }: { count?: number, area?: numbe
         const temp = [];
         for (let i = 0; i < count; i++) {
             const x = (Math.random() - 0.5) * area;
-            const z = (Math.random() - 0.5) * area - 50; // Offset to be around the city
+            const z = (Math.random() - 0.5) * area - 50;
             // Avoid placing trees on the main road path (center)
             if (Math.abs(x) < 15) continue;
-            const scale = 0.8 + Math.random() * 0.6;
-            const treeType = Math.random() > 0.5 ? 'pine' : 'deciduous';
-            temp.push({ position: [x, 0, z], scale, treeType });
+            const scale = 1.2 + Math.random() * 1.5; // Larger, more varied sizes
+            const treeType = Math.random() > 0.6 ? 'pine' : 'deciduous';
+            const height = 3 + Math.random() * 4; // Varied heights
+            temp.push({ position: [x, 0, z], scale, treeType, height });
         }
         return temp;
     }, [count, area]);
 
+    const pines = trees.filter(t => t.treeType === 'pine');
+    const deciduous = trees.filter(t => t.treeType === 'deciduous');
+
     return (
         <group>
-            {/* Tree Trunks */}
-            <Instances range={trees.length}>
-                <cylinderGeometry args={[0.3, 0.5, 2, 8]} />
-                <meshStandardMaterial color="#3d2817" roughness={0.9} />
-                {trees.map((data, i) => (
+            {/* Pine Tree Trunks */}
+            <Instances range={pines.length}>
+                <cylinderGeometry args={[0.25, 0.35, 1, 8]} />
+                <meshStandardMaterial color="#2d1f15" roughness={0.95} />
+                {pines.map((data, i) => (
                     <Instance
                         key={i}
-                        position={[data.position[0], 1, data.position[2]] as any}
-                        scale={[data.scale, data.scale, data.scale] as any}
+                        position={[data.position[0], data.height * 0.3, data.position[2]] as any}
+                        scale={[data.scale * 0.8, data.height * 0.6, data.scale * 0.8] as any}
                     />
                 ))}
             </Instances>
 
-            {/* Tree Foliage - Pine Trees */}
-            <Instances range={trees.filter(t => t.treeType === 'pine').length}>
-                <coneGeometry args={[2, 4, 8]} />
-                <meshStandardMaterial color="#1a4d2e" roughness={0.8} />
-                {trees.filter(t => t.treeType === 'pine').map((data, i) => (
+            {/* Pine Tree Foliage - Multiple Layers */}
+            <Instances range={pines.length * 3}>
+                <coneGeometry args={[1, 2, 8]} />
+                <meshStandardMaterial color="#1a3d1a" roughness={0.85} />
+                {pines.flatMap((data, i) => [
+                    // Bottom layer
+                    <Instance
+                        key={`${i}-0`}
+                        position={[data.position[0], data.height * 0.5, data.position[2]] as any}
+                        scale={[data.scale * 1.2, data.scale * 1.2, data.scale * 1.2] as any}
+                    />,
+                    // Middle layer
+                    <Instance
+                        key={`${i}-1`}
+                        position={[data.position[0], data.height * 0.7, data.position[2]] as any}
+                        scale={[data.scale * 0.9, data.scale * 0.9, data.scale * 0.9] as any}
+                    />,
+                    // Top layer
+                    <Instance
+                        key={`${i}-2`}
+                        position={[data.position[0], data.height * 0.85, data.position[2]] as any}
+                        scale={[data.scale * 0.6, data.scale * 0.6, data.scale * 0.6] as any}
+                    />
+                ])}
+            </Instances>
+
+            {/* Deciduous Tree Trunks */}
+            <Instances range={deciduous.length}>
+                <cylinderGeometry args={[0.2, 0.4, 1, 8]} />
+                <meshStandardMaterial color="#3d2817" roughness={0.95} />
+                {deciduous.map((data, i) => (
                     <Instance
                         key={i}
-                        position={[data.position[0], 3 * data.scale, data.position[2]] as any}
-                        scale={[data.scale, data.scale, data.scale] as any}
+                        position={[data.position[0], data.height * 0.35, data.position[2]] as any}
+                        scale={[data.scale * 0.7, data.height * 0.7, data.scale * 0.7] as any}
                     />
                 ))}
             </Instances>
 
-            {/* Tree Foliage - Deciduous Trees (Spherical) */}
-            <Instances range={trees.filter(t => t.treeType === 'deciduous').length}>
-                <sphereGeometry args={[1.5, 8, 8]} />
-                <meshStandardMaterial color="#2d5a27" roughness={0.7} />
-                {trees.filter(t => t.treeType === 'deciduous').map((data, i) => (
-                    <Instance
-                        key={i}
-                        position={[data.position[0], 2.5 * data.scale, data.position[2]] as any}
-                        scale={[data.scale, data.scale * 0.8, data.scale] as any}
-                    />
-                ))}
+            {/* Deciduous Tree Foliage - Irregular clusters */}
+            <Instances range={deciduous.length * 4}>
+                <sphereGeometry args={[1, 6, 6]} />
+                <meshStandardMaterial color="#2d5016" roughness={0.8} />
+                {deciduous.flatMap((data, i) => {
+                    const offsets = [
+                        [0, 0, 0],
+                        [0.3, 0.2, 0.2],
+                        [-0.3, 0.1, -0.2],
+                        [0.2, -0.1, 0.3]
+                    ];
+                    return offsets.map((offset, j) => (
+                        <Instance
+                            key={`${i}-${j}`}
+                            position={[
+                                data.position[0] + offset[0] * data.scale,
+                                data.height * 0.75 + offset[1] * data.scale,
+                                data.position[2] + offset[2] * data.scale
+                            ] as any}
+                            scale={[
+                                data.scale * (0.8 + Math.random() * 0.4),
+                                data.scale * (0.7 + Math.random() * 0.3),
+                                data.scale * (0.8 + Math.random() * 0.4)
+                            ] as any}
+                        />
+                    ));
+                })}
             </Instances>
         </group>
     );
@@ -85,10 +131,10 @@ export function Mountains() {
     );
 }
 
-// Car component with realistic 3D model
-function Car({ position, color, speed = 1 }: { position: [number, number, number], color: string, speed?: number }) {
+// Smaller, more realistic car component
+function Car({ position, color }: { position: [number, number, number], color: string }) {
     return (
-        <group position={position}>
+        <group position={position} scale={0.4}>
             {/* Car Body */}
             <mesh position={[0, 0.3, 0]}>
                 <boxGeometry args={[1.8, 0.6, 4]} />
@@ -156,7 +202,7 @@ export function HighwayCars() {
         <group ref={carsRef} position={[0, 0.2, 0]}>
             {cars.map((car, i) => (
                 <group key={i} position={[car.lane, 0, car.offset]}>
-                    <Car position={[0, 0, 0]} color={car.color} speed={car.speed} />
+                    <Car position={[0, 0, 0]} color={car.color} />
                 </group>
             ))}
         </group>
