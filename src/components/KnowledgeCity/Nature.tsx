@@ -120,7 +120,7 @@ export function Mountains() {
             const side = Math.random() > 0.5 ? -1 : 1;
             const x = side * (30 + Math.random() * 40);
             const z = -80 - Math.random() * 40;
-            const y = Math.random() * 8; // Trees at various elevations
+            const y = Math.random() * 12; // Trees at various elevations
             const scale = 0.8 + Math.random() * 0.5;
             temp.push({ position: [x, y, z], scale });
         }
@@ -128,38 +128,46 @@ export function Mountains() {
     }, []);
 
     return (
-        <group position={[0, 0, -100]}>
-            {/* Rolling Hills - Left Side */}
-            <mesh position={[-45, -2, -10]} rotation={[0, 0.3, 0]}>
-                <sphereGeometry args={[25, 16, 16, 0, Math.PI]} />
-                <meshStandardMaterial color="#6b8e5a" roughness={0.85} />
+        <group position={[0, -1, -100]}>
+            {/* Left Mountain Range */}
+            <mesh position={[-55, 0, -20]} rotation={[0, 0.2, 0]}>
+                <coneGeometry args={[28, 45, 8]} />
+                <meshStandardMaterial color="#6b8e5a" roughness={0.9} />
             </mesh>
-            <mesh position={[-35, -3, -25]} rotation={[0, 0.2, 0]}>
-                <sphereGeometry args={[20, 16, 16, 0, Math.PI]} />
-                <meshStandardMaterial color="#5a7d49" roughness={0.85} />
+            <mesh position={[-40, 0, -10]} rotation={[0, 0.1, 0]}>
+                <coneGeometry args={[22, 38, 8]} />
+                <meshStandardMaterial color="#5a7d49" roughness={0.9} />
             </mesh>
-
-            {/* Rolling Hills - Right Side */}
-            <mesh position={[45, -2, -15]} rotation={[0, -0.3, 0]}>
-                <sphereGeometry args={[22, 16, 16, 0, Math.PI]} />
-                <meshStandardMaterial color="#6b8e5a" roughness={0.85} />
-            </mesh>
-            <mesh position={[38, -3, -30]} rotation={[0, -0.2, 0]}>
-                <sphereGeometry args={[18, 16, 16, 0, Math.PI]} />
-                <meshStandardMaterial color="#5a7d49" roughness={0.85} />
+            <mesh position={[-48, 0, -35]} rotation={[0, -0.1, 0]}>
+                <coneGeometry args={[25, 42, 8]} />
+                <meshStandardMaterial color="#6b8e5a" roughness={0.9} />
             </mesh>
 
-            {/* Distant Mountains - More Natural Shapes */}
-            <mesh position={[-50, 5, -50]} rotation={[0, 0.1, 0]}>
-                <sphereGeometry args={[35, 16, 16, 0, Math.PI * 0.6]} />
+            {/* Right Mountain Range */}
+            <mesh position={[55, 0, -15]} rotation={[0, -0.2, 0]}>
+                <coneGeometry args={[26, 43, 8]} />
+                <meshStandardMaterial color="#6b8e5a" roughness={0.9} />
+            </mesh>
+            <mesh position={[42, 0, -8]} rotation={[0, -0.15, 0]}>
+                <coneGeometry args={[20, 36, 8]} />
+                <meshStandardMaterial color="#5a7d49" roughness={0.9} />
+            </mesh>
+            <mesh position={[50, 0, -30]} rotation={[0, 0.1, 0]}>
+                <coneGeometry args={[24, 40, 8]} />
+                <meshStandardMaterial color="#6b8e5a" roughness={0.9} />
+            </mesh>
+
+            {/* Distant Central Mountains */}
+            <mesh position={[-15, 2, -50]} rotation={[0, 0.05, 0]}>
+                <coneGeometry args={[35, 55, 8]} />
                 <meshStandardMaterial color="#7c9a6d" roughness={0.9} />
             </mesh>
-            <mesh position={[0, 8, -60]} rotation={[0, 0, 0]}>
-                <sphereGeometry args={[45, 16, 16, 0, Math.PI * 0.55]} />
+            <mesh position={[0, 3, -60]} rotation={[0, 0, 0]}>
+                <coneGeometry args={[40, 60, 8]} />
                 <meshStandardMaterial color="#8aa87a" roughness={0.9} />
             </mesh>
-            <mesh position={[55, 6, -55]} rotation={[0, -0.15, 0]}>
-                <sphereGeometry args={[32, 16, 16, 0, Math.PI * 0.58]} />
+            <mesh position={[18, 2, -55]} rotation={[0, -0.08, 0]}>
+                <coneGeometry args={[32, 52, 8]} />
                 <meshStandardMaterial color="#7c9a6d" roughness={0.9} />
             </mesh>
 
