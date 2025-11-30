@@ -23,7 +23,7 @@ export default function Overlay() {
                     <p style={{ marginBottom: '1.5rem', lineHeight: '1.6' }}>
                         Stories of history, science, business, and innovation.
                     </p>
-                    <a href="#podcast" style={{ pointerEvents: 'auto', color: '#a855f7', fontWeight: 'bold', textDecoration: 'none' }}>Listen to Podcast →</a>
+                    <a href="https://open.spotify.com/show/5GgvbJT6WznJCmIX6OeEGy?si=ce9e5a1dd07245bb" target="_blank" rel="noopener noreferrer" style={{ pointerEvents: 'auto', color: '#a855f7', fontWeight: 'bold', textDecoration: 'none' }}>Listen to Podcast →</a>
                 </div>
             </section>
 
