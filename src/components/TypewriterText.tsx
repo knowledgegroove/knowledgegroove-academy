@@ -10,7 +10,6 @@ interface TypewriterTextProps {
     className?: string;
     cursor?: boolean;
     onComplete?: () => void;
-    as?: React.ElementType;
 }
 
 export default function TypewriterText({
@@ -21,7 +20,6 @@ export default function TypewriterText({
     className = '',
     cursor = true,
     onComplete,
-    as: Component = 'span'
 }: TypewriterTextProps) {
     const [displayedText, setDisplayedText] = useState('');
     const [isTyping, setIsTyping] = useState(false);
@@ -58,7 +56,7 @@ export default function TypewriterText({
     }, [isTyping, text, speed, onComplete]);
 
     return (
-        <Component className={className}>
+        <span className={className}>
             {displayedText}
             {cursor && !isComplete && (
                 <span style={{
@@ -77,6 +75,6 @@ export default function TypewriterText({
           50% { opacity: 0; }
         }
       `}</style>
-        </Component>
+        </span>
     );
 }
