@@ -2,10 +2,10 @@
 
 import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Text, Float, MeshDistortMaterial, Html, RoundedBox } from '@react-three/drei';
+import { Text, Float, MeshDistortMaterial, Html, RoundedBox, useScroll } from '@react-three/drei';
 import * as THREE from 'three';
 
-// Reusable Neon Building Component with Rounded Edges
+// Reusable Building Component (Daytime Style)
 export function Building({ position, args, color, delay = 0 }: any) {
     const mesh = useRef<THREE.Mesh>(null);
 
@@ -22,12 +22,16 @@ export function Building({ position, args, color, delay = 0 }: any) {
             <RoundedBox args={args} radius={0.1} smoothness={4} ref={mesh}>
                 <meshStandardMaterial
                     color={color}
-                    emissive={color}
-                    emissiveIntensity={0.5}
-                    roughness={0.2}
-                    metalness={0.8}
+                    roughness={0.3}
+                    metalness={0.2}
                 />
             </RoundedBox>
+            {/* Glass Windows Effect */}
+            {/* Position relative to the group, args[2]/2 is half the depth, +0.01 to be slightly in front */}
+            <mesh position={[0, 0, args[2] / 2 + 0.01]}>
+                <planeGeometry args={[args[0] * 0.8, args[1] * 0.8]} />
+                <meshStandardMaterial color="#87CEEB" roughness={0.1} metalness={0.9} />
+            </mesh>
         </group>
     );
 }
@@ -39,39 +43,39 @@ export function Road({ position, rotation = [0, 0, 0], length = 20 }: any) {
             {/* Road Surface */}
             <mesh rotation={[-Math.PI / 2, 0, 0]}>
                 <planeGeometry args={[4, length]} />
-                <meshStandardMaterial color="#1a1a1a" roughness={0.8} metalness={0.2} />
+                <meshStandardMaterial color="#333" roughness={0.8} metalness={0.2} />
             </mesh>
-            {/* Glowing Edges */}
-            <mesh position={[-2.1, 0.05, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-                <planeGeometry args={[0.2, length]} />
-                <meshBasicMaterial color="#4f46e5" transparent opacity={0.5} />
-            </mesh>
-            <mesh position={[2.1, 0.05, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-                <planeGeometry args={[0.2, length]} />
-                <meshBasicMaterial color="#4f46e5" transparent opacity={0.5} />
-            </mesh>
-            {/* Moving Data Particles (Simulated Traffic) */}
-            <MovingParticles length={length} />
+            {/* Road Markings */}
+            <MovingMarkings length={length} />
         </group>
     );
 }
 
-function MovingParticles({ length }: { length: number }) {
-    const particles = useRef<THREE.Group>(null);
+function MovingMarkings({ length }: { length: number }) {
+    const markings = useRef<THREE.Group>(null);
+    const scroll = useScroll();
 
-    useFrame((state) => {
-        if (particles.current) {
-            particles.current.children.forEach((child: any, i) => {
-                child.position.z = (state.clock.elapsedTime * 5 + i * 5) % length - length / 2;
+    useFrame(() => {
+        if (markings.current) {
+            // Move markings based on scroll offset
+            // scroll.offset goes from 0 to 1
+            // We multiply by a factor to make them loop
+            const offset = scroll.offset * 50;
+
+            markings.current.children.forEach((child: any, i) => {
+                // Calculate position based on scroll + initial index offset
+                // The modulo operator (%) creates the looping effect
+                const zPos = ((offset + i * 5) % length) - length / 2;
+                child.position.z = -zPos; // Invert if needed for direction
             });
         }
     });
 
     return (
-        <group ref={particles} position={[0, 0.1, 0]}>
-            {[...Array(5)].map((_, i) => (
-                <mesh key={i} position={[0, 0, 0]}>
-                    <boxGeometry args={[0.2, 0.2, 1]} />
+        <group ref={markings} position={[0, 0.02, 0]}>
+            {[...Array(Math.floor(length / 5))].map((_, i) => (
+                <mesh key={i} rotation={[-Math.PI / 2, 0, 0]}>
+                    <planeGeometry args={[0.2, 2]} />
                     <meshBasicMaterial color="#fff" />
                 </mesh>
             ))}

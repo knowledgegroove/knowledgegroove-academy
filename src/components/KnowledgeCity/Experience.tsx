@@ -1,10 +1,11 @@
 'use client';
 
-import { useScroll, Stars, PerspectiveCamera } from '@react-three/drei';
+import { useScroll, Sky, Environment, PerspectiveCamera } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useRef, useMemo } from 'react';
 import * as THREE from 'three';
 import { PodcastDistrict, FinTechDistrict, AcademyDistrict, CreatorTower, Road } from './Buildings';
+import { Trees, Mountains } from './Nature';
 
 export default function Experience() {
     const scroll = useScroll();
@@ -43,22 +44,29 @@ export default function Experience() {
         <>
             <PerspectiveCamera makeDefault position={[0, 2, 10]} ref={cameraRef} fov={60} />
 
-            {/* Background Color - Critical for preventing white screen */}
-            <color attach="background" args={['#030014']} />
-
-            {/* Lighting */}
-            <ambientLight intensity={0.2} />
-            <pointLight position={[10, 10, 10]} intensity={1} color="#4f46e5" />
-            <pointLight position={[-10, 10, -10]} intensity={1} color="#ec4899" />
-
-            {/* Environment */}
-            <Stars radius={100} depth={50} count={1000} factor={4} saturation={0} fade speed={1} />
-            <fog attach="fog" args={['#030014', 10, 60]} />
+            {/* Daylight Environment */}
+            <color attach="background" args={['#87CEEB']} />
+            <Sky sunPosition={[100, 20, 100]} />
+            <ambientLight intensity={0.8} />
+            <directionalLight
+                position={[50, 50, 25]}
+                intensity={1.5}
+                castShadow
+                shadow-mapSize={[1024, 1024]}
+            />
+            <fog attach="fog" args={['#87CEEB', 10, 80]} />
 
             {/* City Content */}
             <group ref={groupRef}>
-                {/* Floor Grid */}
-                <gridHelper args={[200, 100, 0x4f46e5, 0x222222]} position={[0, -0.1, -50]} />
+                {/* Ground */}
+                <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.1, -50]} receiveShadow>
+                    <planeGeometry args={[200, 200]} />
+                    <meshStandardMaterial color="#3a4d31" />
+                </mesh>
+
+                {/* Nature */}
+                <Trees count={100} area={150} />
+                <Mountains />
 
                 {/* Roads */}
                 <Road position={[0, 0.1, -20]} length={40} /> {/* Main Road */}

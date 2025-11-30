@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import IntroAnimation from "@/components/IntroAnimation";
+import TypewriterText from "@/components/TypewriterText";
 
 // Dynamically import CityScene to avoid SSR issues with 3D canvas
 const CityScene = dynamic(() => import('@/components/KnowledgeCity/CityScene'), {
@@ -11,12 +12,12 @@ const CityScene = dynamic(() => import('@/components/KnowledgeCity/CityScene'), 
 });
 
 export default function Home() {
-  const [introFinished, setIntroFinished] = useState(false);
+  const [stage, setStage] = useState<'intro' | 'typing' | 'city'>('intro');
 
   return (
-    <main style={{ width: '100vw', height: '100vh', background: '#030014', overflow: 'hidden', position: 'relative' }}>
+    <main style={{ width: '100vw', height: '100vh', background: '#000', overflow: 'hidden', position: 'relative' }}>
 
-      {/* City Scene - Always mounted to avoid re-initialization errors and allow preloading */}
+      {/* City Scene - Preloaded but hidden until typing is done */}
       <div style={{
         position: 'absolute',
         top: 0,
@@ -24,15 +25,36 @@ export default function Home() {
         width: '100%',
         height: '100%',
         zIndex: 1,
-        opacity: introFinished ? 1 : 0,
-        pointerEvents: introFinished ? 'auto' : 'none',
-        transition: 'opacity 1.5s ease-in-out'
+        opacity: stage === 'city' ? 1 : 0,
+        pointerEvents: stage === 'city' ? 'auto' : 'none',
+        transition: 'opacity 2s ease-in-out'
       }}>
         <CityScene />
       </div>
 
-      {/* Intro Animation - Unmounts after completion to cleanup */}
-      {!introFinished && (
+      {/* Typewriter Phase - Black screen with text */}
+      {stage === 'typing' && (
+        <div style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          zIndex: 30,
+          background: 'black',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <TypewriterText
+            text="Welcome to Knowledge Groove"
+            onComplete={() => setTimeout(() => setStage('city'), 1000)}
+          />
+        </div>
+      )}
+
+      {/* Intro Animation - Unmounts after completion */}
+      {stage === 'intro' && (
         <div style={{
           position: 'absolute',
           top: 0,
@@ -41,7 +63,7 @@ export default function Home() {
           height: '100%',
           zIndex: 20
         }}>
-          <IntroAnimation onComplete={() => setIntroFinished(true)} />
+          <IntroAnimation onComplete={() => setStage('typing')} />
         </div>
       )}
     </main>
