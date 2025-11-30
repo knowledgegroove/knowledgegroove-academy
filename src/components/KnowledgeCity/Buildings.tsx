@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Text, Float, MeshDistortMaterial, Html } from '@react-three/drei';
 import * as THREE from 'three';
@@ -8,6 +8,7 @@ import * as THREE from 'three';
 // Reusable Neon Building Component
 export function Building({ position, args, color, delay = 0 }: any) {
     const mesh = useRef<THREE.Mesh>(null);
+    const edgesGeo = useMemo(() => new THREE.EdgesGeometry(new THREE.BoxGeometry(...args)), [args]);
 
     useFrame((state) => {
         if (mesh.current) {
@@ -28,8 +29,7 @@ export function Building({ position, args, color, delay = 0 }: any) {
                 opacity={0.9}
             />
             {/* Wireframe effect overlay */}
-            <lineSegments>
-                <edgesGeometry args={[new THREE.BoxGeometry(...args)]} />
+            <lineSegments geometry={edgesGeo}>
                 <lineBasicMaterial color="white" transparent opacity={0.2} />
             </lineSegments>
         </mesh>

@@ -43,6 +43,9 @@ export default function Experience() {
         <>
             <PerspectiveCamera makeDefault position={[0, 2, 10]} ref={cameraRef} fov={60} />
 
+            {/* Background Color - Critical for preventing white screen */}
+            <color attach="background" args={['#030014']} />
+
             {/* Lighting */}
             <ambientLight intensity={0.2} />
             <pointLight position={[10, 10, 10]} intensity={1} color="#4f46e5" />
