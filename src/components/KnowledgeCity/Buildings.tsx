@@ -10,11 +10,40 @@ export function Road({ position, rotation = [0, 0, 0], length = 20 }: any) {
     return (
         <group position={position} rotation={rotation}>
             {/* Road Surface */}
-            <mesh rotation={[-Math.PI / 2, 0, 0]}>
-                <planeGeometry args={[4, length]} />
-                <meshStandardMaterial color="#333" roughness={0.8} />
+            <mesh rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+                <planeGeometry args={[7, length]} />
+                <meshStandardMaterial color="#2a2a2a" roughness={0.8} />
             </mesh>
-            {/* Road Markings */}
+
+            {/* Side Lines */}
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-3.2, 0.01, 0]}>
+                <planeGeometry args={[0.15, length]} />
+                <meshStandardMaterial color="#ffffff" />
+            </mesh>
+            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[3.2, 0.01, 0]}>
+                <planeGeometry args={[0.15, length]} />
+                <meshStandardMaterial color="#ffffff" />
+            </mesh>
+
+            {/* Guard Rails */}
+            <group position={[-3.6, 0.5, 0]}>
+                <mesh>
+                    <boxGeometry args={[0.2, 0.8, length]} />
+                    <meshStandardMaterial color="#888" metalness={0.8} roughness={0.2} />
+                </mesh>
+                <mesh position={[0, -0.4, 0]}>
+                    <cylinderGeometry args={[0.1, 0.1, 1, 8]} />
+                    <meshStandardMaterial color="#666" />
+                </mesh>
+            </group>
+            <group position={[3.6, 0.5, 0]}>
+                <mesh>
+                    <boxGeometry args={[0.2, 0.8, length]} />
+                    <meshStandardMaterial color="#888" metalness={0.8} roughness={0.2} />
+                </mesh>
+            </group>
+
+            {/* Road Markings - Center Line */}
             <MovingMarkings length={length} />
         </group>
     );
@@ -111,15 +140,15 @@ export function PodcastDistrict({ position }: { position: [number, number, numbe
 
             {/* Large Visible Label */}
             <Text
-                position={[0, 10, 0]}
-                fontSize={1.5}
+                position={[0, 9, 0]}
+                fontSize={1.0}
                 color="#a855f7"
                 anchorX="center"
                 anchorY="middle"
-                outlineWidth={0.1}
+                outlineWidth={0.05}
                 outlineColor="#000000"
             >
-                PODCAST
+                Podcast
             </Text>
             <Text
                 position={[0, 0.5, 0]}
@@ -172,7 +201,7 @@ export function FinTechDistrict({ position }: { position: [number, number, numbe
                     <boxGeometry args={[1.9, 15, 1.9]} />
                     <meshStandardMaterial color="#006699" metalness={0.9} roughness={0.1} />
                 </mesh>
-                <mesh position={[-6, 6, 0]}>
+                <mesh position={[-4.2, 6, 0]}>
                     <boxGeometry args={[1.6, 12, 1.6]} />
                     <meshStandardMaterial color="#005588" metalness={0.9} roughness={0.1} />
                 </mesh>
@@ -218,15 +247,15 @@ export function FinTechDistrict({ position }: { position: [number, number, numbe
 
             {/* Large Visible Label */}
             <Text
-                position={[0, 22, 2]}
-                fontSize={1.5}
+                position={[0, 21, 2]}
+                fontSize={1.0}
                 color="#00C4FF"
                 anchorX="center"
                 anchorY="middle"
-                outlineWidth={0.1}
+                outlineWidth={0.05}
                 outlineColor="#000000"
             >
-                AI + FINTECH
+                AI + FinTech
             </Text>
             <Text
                 position={[0, 0.5, 0]}
@@ -311,15 +340,15 @@ export function AcademyDistrict({ position }: { position: [number, number, numbe
 
             {/* Large Visible Label */}
             <Text
-                position={[0, 6, 0]}
-                fontSize={1.5}
+                position={[0, 5.5, 0]}
+                fontSize={1.0}
                 color="#ec4899"
                 anchorX="center"
                 anchorY="middle"
-                outlineWidth={0.1}
+                outlineWidth={0.05}
                 outlineColor="#000000"
             >
-                ACADEMY
+                Academy
             </Text>
             <Text
                 position={[0, 0.3, 0]}
@@ -406,15 +435,15 @@ export function CreatorTower({ position }: { position: [number, number, number] 
 
             {/* Large Visible Label */}
             <Text
-                position={[0, 19, 0]}
-                fontSize={1.5}
+                position={[0, 18, 0]}
+                fontSize={1.0}
                 color="#fbbf24"
                 anchorX="center"
                 anchorY="middle"
-                outlineWidth={0.1}
+                outlineWidth={0.05}
                 outlineColor="#000000"
             >
-                ISHAAN GARG
+                I'm Ishaan
             </Text>
             <Text
                 position={[0, 0.8, 0]}

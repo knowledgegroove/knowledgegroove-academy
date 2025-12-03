@@ -10,6 +10,8 @@ export default function Experience() {
     const cameraRef = useRef<THREE.PerspectiveCamera>(null);
     const groupRef = useRef<THREE.Group>(null);
 
+    const cloudGroupRef = useRef<THREE.Group>(null);
+
     // Define keyframes for camera path
     // Format: [x, y, z]
     const curve = useMemo(() => {
@@ -35,6 +37,11 @@ export default function Experience() {
             // Smoothly interpolate camera position
             cameraRef.current.position.lerp(point, delta * 24); // High speed lerp for responsiveness
             cameraRef.current.lookAt(lookAtPoint);
+
+            // Move clouds with camera
+            if (cloudGroupRef.current) {
+                cloudGroupRef.current.position.z = cameraRef.current.position.z;
+            }
         }
     });
 
@@ -55,23 +62,26 @@ export default function Experience() {
             />
 
             {/* Volumetric Clouds - Distributed along the entire path */}
-            {/* Near clouds */}
-            <Cloud position={[-20, 15, -10]} speed={0.1} opacity={0.4} color="#ffb380" />
-            <Cloud position={[25, 18, -25]} speed={0.15} opacity={0.3} color="#ffa060" />
+            {/* Volumetric Clouds - Moving with Camera */}
+            <group ref={cloudGroupRef}>
+                {/* Near clouds */}
+                <Cloud position={[-20, 15, -10]} speed={0.1} opacity={0.4} color="#ffb380" />
+                <Cloud position={[25, 18, -25]} speed={0.15} opacity={0.3} color="#ffa060" />
 
-            {/* Mid-range clouds */}
-            <Cloud position={[-15, 20, -45]} speed={0.12} opacity={0.35} color="#ff9050" />
-            <Cloud position={[30, 16, -55]} speed={0.08} opacity={0.4} color="#ffb890" />
-            <Cloud position={[-25, 22, -70]} speed={0.1} opacity={0.35} color="#ffb380" />
+                {/* Mid-range clouds */}
+                <Cloud position={[-15, 20, -45]} speed={0.12} opacity={0.35} color="#ff9050" />
+                <Cloud position={[30, 16, -55]} speed={0.08} opacity={0.4} color="#ffb890" />
+                <Cloud position={[-25, 22, -70]} speed={0.1} opacity={0.35} color="#ffb380" />
 
-            {/* Far clouds */}
-            <Cloud position={[20, 19, -85]} speed={0.09} opacity={0.3} color="#ffa060" />
-            <Cloud position={[-18, 17, -95]} speed={0.11} opacity={0.38} color="#ff9050" />
-            <Cloud position={[28, 21, -110]} speed={0.13} opacity={0.32} color="#ffb890" />
+                {/* Far clouds */}
+                <Cloud position={[20, 19, -85]} speed={0.09} opacity={0.3} color="#ffa060" />
+                <Cloud position={[-18, 17, -95]} speed={0.11} opacity={0.38} color="#ff9050" />
+                <Cloud position={[28, 21, -110]} speed={0.13} opacity={0.32} color="#ffb890" />
 
-            {/* Very far clouds for depth */}
-            <Cloud position={[-22, 18, -125]} speed={0.08} opacity={0.3} color="#ffb380" />
-            <Cloud position={[15, 20, -135]} speed={0.1} opacity={0.35} color="#ffa060" />
+                {/* Very far clouds for depth */}
+                <Cloud position={[-22, 18, -125]} speed={0.08} opacity={0.3} color="#ffb380" />
+                <Cloud position={[15, 20, -135]} speed={0.1} opacity={0.35} color="#ffa060" />
+            </group>
             {/* Warm Sunset Lighting */}
             <ambientLight intensity={0.6} color="#ffe4b5" />
             <directionalLight
@@ -102,7 +112,7 @@ export default function Experience() {
                 </mesh>
 
                 {/* Nature */}
-                <Trees count={100} area={150} />
+                <Trees count={300} area={250} />
                 <Mountains />
 
                 {/* Highway Cars */}
@@ -117,13 +127,13 @@ export default function Experience() {
 
                 {/* Districts - Aligned along the straight road */}
                 {/* Podcast on Left */}
-                <PodcastDistrict position={[-8, 0, -20]} />
+                <PodcastDistrict position={[-9, 0, -20]} />
 
                 {/* FinTech on Right */}
-                <FinTechDistrict position={[8, 0, -40]} />
+                <FinTechDistrict position={[9, 0, -40]} />
 
                 {/* Academy on Left */}
-                <AcademyDistrict position={[-8, 0, -60]} />
+                <AcademyDistrict position={[-9, 0, -60]} />
 
                 {/* Creator Tower at the End */}
                 <CreatorTower position={[0, 0, -80]} />

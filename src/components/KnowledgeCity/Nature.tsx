@@ -5,107 +5,106 @@ import { Instance, Instances } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
-export function Trees({ count = 50, area = 100 }: { count?: number, area?: number }) {
+export function Trees({ count = 150, area = 200 }: { count?: number, area?: number }) {
     const trees = useMemo(() => {
         const temp = [];
         for (let i = 0; i < count; i++) {
             const x = (Math.random() - 0.5) * area;
             const z = (Math.random() - 0.5) * area - 50;
-            // Avoid placing trees on the main road path (center)
-            if (Math.abs(x) < 15) continue;
-            const scale = 1.2 + Math.random() * 1.5; // Larger, more varied sizes
-            const treeType = Math.random() > 0.6 ? 'pine' : 'deciduous';
-            const height = 3 + Math.random() * 4; // Varied heights
-            temp.push({ position: [x, 0, z], scale, treeType, height });
+            // Avoid placing trees on the main road path (center) - narrower exclusion for narrower road
+            if (Math.abs(x) < 5) continue;
+
+            // Avoid placing trees near districts to prevent overlap
+            // Podcast: [-9, -20]
+            if (Math.abs(x - (-9)) < 8 && Math.abs(z - (-20)) < 8) continue;
+            // FinTech: [9, -40]
+            if (Math.abs(x - 9) < 8 && Math.abs(z - (-40)) < 8) continue;
+            // Academy: [-9, -60]
+            if (Math.abs(x - (-9)) < 8 && Math.abs(z - (-60)) < 8) continue;
+            // Creator Tower: [0, -80]
+            if (Math.abs(x - 0) < 8 && Math.abs(z - (-80)) < 8) continue;
+
+            const scale = 1.5 + Math.random() * 2; // Larger, more varied sizes
+            const typeRandom = Math.random();
+            const treeType = typeRandom > 0.7 ? 'pine' : (typeRandom > 0.4 ? 'deciduous' : 'bushy');
+            const height = 4 + Math.random() * 6; // Varied heights
+
+            // Varied greens
+            const colorBase = Math.random();
+            let color;
+            if (colorBase > 0.6) color = "#2d5a27"; // Deep green
+            else if (colorBase > 0.3) color = "#4a7c35"; // Medium green
+            else color = "#6b8c42"; // Lighter olive green
+
+            // Ensure y is 0 to prevent flying trees
+            temp.push({ position: [x, 0, z], scale, treeType, height, color });
         }
         return temp;
     }, [count, area]);
 
     const pines = trees.filter(t => t.treeType === 'pine');
     const deciduous = trees.filter(t => t.treeType === 'deciduous');
+    const bushy = trees.filter(t => t.treeType === 'bushy');
 
     return (
         <group>
-            {/* Pine Tree Trunks */}
-            <Instances range={pines.length}>
-                <cylinderGeometry args={[0.25, 0.35, 1, 8]} />
-                <meshStandardMaterial color="#2d1f15" roughness={0.95} />
-                {pines.map((data, i) => (
-                    <Instance
-                        key={i}
-                        position={[data.position[0], data.height * 0.3, data.position[2]] as any}
-                        scale={[data.scale * 0.8, data.height * 0.6, data.scale * 0.8] as any}
-                    />
-                ))}
-            </Instances>
+            {/* Pine Trees */}
+            {pines.map((data, i) => (
+                <group key={`pine-${i}`} position={data.position as any} scale={data.scale * 0.5}>
+                    <mesh position={[0, data.height * 0.2, 0]}>
+                        <cylinderGeometry args={[0.2, 0.4, data.height * 0.4, 8]} />
+                        <meshStandardMaterial color="#3d2817" roughness={0.9} />
+                    </mesh>
+                    <mesh position={[0, data.height * 0.5, 0]}>
+                        <coneGeometry args={[1.2, data.height * 0.6, 8]} />
+                        <meshStandardMaterial color={data.color} roughness={0.8} />
+                    </mesh>
+                    <mesh position={[0, data.height * 0.7, 0]}>
+                        <coneGeometry args={[1, data.height * 0.5, 8]} />
+                        <meshStandardMaterial color={data.color} roughness={0.8} />
+                    </mesh>
+                    <mesh position={[0, data.height * 0.85, 0]}>
+                        <coneGeometry args={[0.8, data.height * 0.4, 8]} />
+                        <meshStandardMaterial color={data.color} roughness={0.8} />
+                    </mesh>
+                </group>
+            ))}
 
-            {/* Pine Tree Foliage - Multiple Layers */}
-            <Instances range={pines.length * 3}>
-                <coneGeometry args={[1, 2, 8]} />
-                <meshStandardMaterial color="#1a3d1a" roughness={0.85} />
-                {pines.flatMap((data, i) => [
-                    // Bottom layer
-                    <Instance
-                        key={`${i}-0`}
-                        position={[data.position[0], data.height * 0.5, data.position[2]] as any}
-                        scale={[data.scale * 1.2, data.scale * 1.2, data.scale * 1.2] as any}
-                    />,
-                    // Middle layer
-                    <Instance
-                        key={`${i}-1`}
-                        position={[data.position[0], data.height * 0.7, data.position[2]] as any}
-                        scale={[data.scale * 0.9, data.scale * 0.9, data.scale * 0.9] as any}
-                    />,
-                    // Top layer
-                    <Instance
-                        key={`${i}-2`}
-                        position={[data.position[0], data.height * 0.85, data.position[2]] as any}
-                        scale={[data.scale * 0.6, data.scale * 0.6, data.scale * 0.6] as any}
-                    />
-                ])}
-            </Instances>
+            {/* Deciduous Trees (Round/Cloudy) */}
+            {deciduous.map((data, i) => (
+                <group key={`deciduous-${i}`} position={data.position as any} scale={data.scale * 0.5}>
+                    <mesh position={[0, data.height * 0.25, 0]}>
+                        <cylinderGeometry args={[0.2, 0.5, data.height * 0.5, 8]} />
+                        <meshStandardMaterial color="#4a3c31" roughness={0.9} />
+                    </mesh>
+                    <mesh position={[0, data.height * 0.8, 0]}>
+                        <dodecahedronGeometry args={[1.5, 0]} />
+                        <meshStandardMaterial color={data.color} roughness={0.8} />
+                    </mesh>
+                    <mesh position={[0.8, data.height * 0.7, 0.5]}>
+                        <dodecahedronGeometry args={[1, 0]} />
+                        <meshStandardMaterial color={data.color} roughness={0.8} />
+                    </mesh>
+                    <mesh position={[-0.8, data.height * 0.75, -0.5]}>
+                        <dodecahedronGeometry args={[1.1, 0]} />
+                        <meshStandardMaterial color={data.color} roughness={0.8} />
+                    </mesh>
+                </group>
+            ))}
 
-            {/* Deciduous Tree Trunks */}
-            <Instances range={deciduous.length}>
-                <cylinderGeometry args={[0.2, 0.4, 1, 8]} />
-                <meshStandardMaterial color="#3d2817" roughness={0.95} />
-                {deciduous.map((data, i) => (
-                    <Instance
-                        key={i}
-                        position={[data.position[0], data.height * 0.35, data.position[2]] as any}
-                        scale={[data.scale * 0.7, data.height * 0.7, data.scale * 0.7] as any}
-                    />
-                ))}
-            </Instances>
-
-            {/* Deciduous Tree Foliage - Irregular clusters */}
-            <Instances range={deciduous.length * 4}>
-                <sphereGeometry args={[1, 6, 6]} />
-                <meshStandardMaterial color="#2d5016" roughness={0.8} />
-                {deciduous.flatMap((data, i) => {
-                    const offsets = [
-                        [0, 0, 0],
-                        [0.3, 0.2, 0.2],
-                        [-0.3, 0.1, -0.2],
-                        [0.2, -0.1, 0.3]
-                    ];
-                    return offsets.map((offset, j) => (
-                        <Instance
-                            key={`${i}-${j}`}
-                            position={[
-                                data.position[0] + offset[0] * data.scale,
-                                data.height * 0.75 + offset[1] * data.scale,
-                                data.position[2] + offset[2] * data.scale
-                            ] as any}
-                            scale={[
-                                data.scale * (0.8 + Math.random() * 0.4),
-                                data.scale * (0.7 + Math.random() * 0.3),
-                                data.scale * (0.8 + Math.random() * 0.4)
-                            ] as any}
-                        />
-                    ));
-                })}
-            </Instances>
+            {/* Bushy Trees (Low and Wide) */}
+            {bushy.map((data, i) => (
+                <group key={`bushy-${i}`} position={data.position as any} scale={data.scale * 0.5}>
+                    <mesh position={[0, data.height * 0.2, 0]}>
+                        <cylinderGeometry args={[0.3, 0.5, data.height * 0.4, 8]} />
+                        <meshStandardMaterial color="#4a3c31" roughness={0.9} />
+                    </mesh>
+                    <mesh position={[0, data.height * 0.6, 0]}>
+                        <icosahedronGeometry args={[1.8, 0]} />
+                        <meshStandardMaterial color={data.color} roughness={0.9} />
+                    </mesh>
+                </group>
+            ))}
         </group>
     );
 }
@@ -114,13 +113,13 @@ export function Mountains() {
     // Create trees for mountain slopes
     const mountainTrees = useMemo(() => {
         const temp = [];
-        for (let i = 0; i < 80; i++) {
+        for (let i = 0; i < 120; i++) {
             // Distribute trees on mountain slopes
             const side = Math.random() > 0.5 ? -1 : 1;
-            const x = side * (30 + Math.random() * 40);
-            const z = -80 - Math.random() * 40;
-            const y = Math.random() * 12; // Trees at various elevations
-            const scale = 0.8 + Math.random() * 0.5;
+            const x = side * (30 + Math.random() * 50);
+            const z = -80 - Math.random() * 60;
+            const y = Math.random() * 15; // Trees at various elevations
+            const scale = 0.8 + Math.random() * 0.8;
             temp.push({ position: [x, y, z], scale });
         }
         return temp;
@@ -131,43 +130,43 @@ export function Mountains() {
             {/* Left Mountain Range */}
             <mesh position={[-55, 0, -20]} rotation={[0, 0.2, 0]}>
                 <coneGeometry args={[28, 45, 8]} />
-                <meshStandardMaterial color="#6b8e5a" roughness={0.9} />
+                <meshStandardMaterial color="#5a7d49" roughness={0.9} />
             </mesh>
             <mesh position={[-40, 0, -10]} rotation={[0, 0.1, 0]}>
                 <coneGeometry args={[22, 38, 8]} />
-                <meshStandardMaterial color="#5a7d49" roughness={0.9} />
+                <meshStandardMaterial color="#4a6b3a" roughness={0.9} />
             </mesh>
             <mesh position={[-48, 0, -35]} rotation={[0, -0.1, 0]}>
                 <coneGeometry args={[25, 42, 8]} />
-                <meshStandardMaterial color="#6b8e5a" roughness={0.9} />
+                <meshStandardMaterial color="#5a7d49" roughness={0.9} />
             </mesh>
 
             {/* Right Mountain Range */}
             <mesh position={[55, 0, -15]} rotation={[0, -0.2, 0]}>
                 <coneGeometry args={[26, 43, 8]} />
-                <meshStandardMaterial color="#6b8e5a" roughness={0.9} />
+                <meshStandardMaterial color="#5a7d49" roughness={0.9} />
             </mesh>
             <mesh position={[42, 0, -8]} rotation={[0, -0.15, 0]}>
                 <coneGeometry args={[20, 36, 8]} />
-                <meshStandardMaterial color="#5a7d49" roughness={0.9} />
+                <meshStandardMaterial color="#4a6b3a" roughness={0.9} />
             </mesh>
             <mesh position={[50, 0, -30]} rotation={[0, 0.1, 0]}>
                 <coneGeometry args={[24, 40, 8]} />
-                <meshStandardMaterial color="#6b8e5a" roughness={0.9} />
+                <meshStandardMaterial color="#5a7d49" roughness={0.9} />
             </mesh>
 
             {/* Distant Central Mountains */}
             <mesh position={[-15, 2, -50]} rotation={[0, 0.05, 0]}>
                 <coneGeometry args={[35, 55, 8]} />
-                <meshStandardMaterial color="#7c9a6d" roughness={0.9} />
+                <meshStandardMaterial color="#6b8e5a" roughness={0.9} />
             </mesh>
             <mesh position={[0, 3, -60]} rotation={[0, 0, 0]}>
                 <coneGeometry args={[40, 60, 8]} />
-                <meshStandardMaterial color="#8aa87a" roughness={0.9} />
+                <meshStandardMaterial color="#7c9a6d" roughness={0.9} />
             </mesh>
             <mesh position={[18, 2, -55]} rotation={[0, -0.08, 0]}>
                 <coneGeometry args={[32, 52, 8]} />
-                <meshStandardMaterial color="#7c9a6d" roughness={0.9} />
+                <meshStandardMaterial color="#6b8e5a" roughness={0.9} />
             </mesh>
 
             {/* Trees on Mountain Slopes */}
@@ -245,14 +244,14 @@ export function HighwayCars() {
     const carsRef = useRef<THREE.Group>(null);
 
     const cars = useMemo(() => [
-        { lane: -1.5, offset: 0, color: '#ff4444', speed: 8 },
-        { lane: -1.5, offset: -30, color: '#4444ff', speed: 7 },
-        { lane: -1.5, offset: -60, color: '#44ff44', speed: 9 },
-        { lane: -1.5, offset: -90, color: '#ffaa44', speed: 7.5 },
-        { lane: 1.5, offset: -15, color: '#ffff44', speed: 8.5 },
-        { lane: 1.5, offset: -45, color: '#ff44ff', speed: 6.5 },
-        { lane: 1.5, offset: -75, color: '#44ffff', speed: 8 },
-        { lane: 1.5, offset: -105, color: '#aa44ff', speed: 7 },
+        // Left Lane (Oncoming)
+        { lane: -1.8, offset: 0, color: '#ff4444', speed: 8 },
+        { lane: -1.8, offset: -60, color: '#44ff44', speed: 9 },
+        { lane: -1.8, offset: -120, color: '#ffaa44', speed: 7.5 },
+        // Right Lane (Going away)
+        { lane: 1.8, offset: -30, color: '#4444ff', speed: 7 },
+        { lane: 1.8, offset: -90, color: '#ffff44', speed: 8.5 },
+        { lane: 1.8, offset: -150, color: '#44ffff', speed: 8 },
     ], []);
 
     useFrame((state) => {
