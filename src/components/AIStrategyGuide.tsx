@@ -15,7 +15,7 @@ export default function AIStrategyGuide() {
         setIsGenerating(true);
 
         try {
-            const response = await fetch("/academy/api/chat", {
+            const response = await fetch("/api/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -60,7 +60,7 @@ export default function AIStrategyGuide() {
         setIsGenerating(true);
 
         try {
-            const response = await fetch("/academy/api/chat", {
+            const response = await fetch("/api/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

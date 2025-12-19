@@ -58,7 +58,7 @@ export default function Chatbot({ courseId, situation }: { courseId?: string, si
                 context = course ? course.title : (pathId || "General");
             }
 
-            const response = await fetch("/academy/api/chat", {
+            const response = await fetch("/api/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
