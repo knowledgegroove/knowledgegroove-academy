@@ -107,7 +107,7 @@ export default function Home() {
                 {subjectCourses.map((course) => (
                   <motion.div key={course.id} variants={item}>
                     <Link
-                      href={`/courses/${course.id}`}
+                      href={`/academy/courses/${course.id}`}
                       className="group block h-full"
                     >
                       <div className="h-full bg-white/60 backdrop-blur-md rounded-3xl p-8 border border-white/50 shadow-sm hover:border-blue-200 transition-all hover:shadow-xl hover:-translate-y-2 relative overflow-hidden">
